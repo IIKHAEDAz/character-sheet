@@ -8,7 +8,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Prompt:wght@300;400;500;600&family=Rozha+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&family=Noto+Serif+Thai:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Prompt:wght@300;400;500;600&family=Rozha+One&family=Unna:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,8 +35,18 @@
 
     <style>
         :root{
-            --gold: #b08d3e;
-            --gold-soft: #c9ab5f;
+            --gold: #18181b;
+            --gold-soft: #a1a1aa;
+            --gold-ink: #3f3f46;
+            --ink: #18181b;
+            --ink-muted: #52525b;
+            --ink-soft: #71717a;
+            --surface: #ffffff;
+            --surface-muted: #f7f7fb;
+            --border: #e6e6ef;
+            --accent-wash: #f4f4f5;
+            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { box-sizing: border-box; }
@@ -44,23 +54,25 @@
         html { overflow-x: hidden; }
 
         body {
-            color: #27272a;
+            color: var(--ink);
             overflow-x: hidden;
             position: relative;
             min-height: 100vh;
             max-width: 100vw;
         }
 
-        /* --- Background Image & Glass Overlay --- */
+        /* --- Editorial image background --- */
         body::before {
             content: '';
             position: fixed;
             top: -5%; left: -5%;
             width: 110%; height: 110%;
-            background-image: url('https://i.ibb.co/hxbZkDtN/IMG-0641.jpg');
-            background-size: cover;
-            background-position: center;
-            filter: blur(10px) saturate(0.9);
+            background-image: url('https://i.ibb.co/hxbZkDtN/IMG-0641.jpg'), url('./character-sheet-bg.png');
+            background-position: center, center;
+            background-size: cover, cover;
+            background-repeat: no-repeat;
+            filter: grayscale(38%) blur(7px) contrast(0.9) saturate(0.72);
+            transform: scale(1.04);
             z-index: -20;
         }
 
@@ -69,7 +81,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background-color: rgba(255, 255, 255, 0.62);
+            background-color: rgba(255,255,255,0.34);
             z-index: -10;
         }
 
@@ -78,58 +90,150 @@
             display: inline-block;
             opacity: 0;
             transform: translateY(10px);
-            animation: textReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            animation: textReveal 0.58s var(--ease-out-expo) forwards;
         }
         @keyframes textReveal { to { opacity: 1; transform: translateY(0); } }
 
-        .fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in-up { animation: fadeInUp 0.56s var(--ease-out-expo) both; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        @keyframes tabFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-8px); }
+        }
+
+        .tab-content.is-fading-out {
+            animation: tabFadeOut 0.28s var(--ease-out-quart) both;
+            pointer-events: none;
+        }
+
+        @keyframes reportReveal {
+            from { opacity: 0; transform: translateY(14px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes reportFadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px) scale(0.99); }
+        }
+
+        @keyframes flagReveal {
+            from { opacity: 0; transform: translateY(12px) scale(0.975); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes actionComplete {
+            0% { transform: scale(0.96); }
+            55% { transform: scale(1.035); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes actionWarning {
+            0%, 100% { transform: translateX(0); }
+            35% { transform: translateX(-4px); }
+            70% { transform: translateX(4px); }
+        }
+
+        @keyframes currentPulse {
+            0% { transform: translate(-50%, -50%) scale(0.7); box-shadow: 0 0 0 0 rgba(24,24,27,0.2); }
+            70% { transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 0 0 5px rgba(24,24,27,0.08); }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 4px rgba(24,24,27,0.12); }
+        }
+
+        @keyframes buttonSheen {
+            from { transform: translateX(-120%) skewX(-16deg); opacity: 0; }
+            20% { opacity: 0.75; }
+            to { transform: translateX(220%) skewX(-16deg); opacity: 0; }
+        }
+
+        @keyframes pageBlurReveal {
+            from {
+                filter: blur(8px);
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                filter: blur(0);
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- First-load reveal --- */
+        .page-entry #site-header {
+            animation: pageBlurReveal 1.18s var(--ease-out-expo) 0.08s both;
+        }
+
+        .page-entry .memo-card {
+            animation: pageBlurReveal 0.98s var(--ease-out-expo) 0.52s both;
+        }
+
+        .page-entry #progress-track,
+        .page-entry #progress-label {
+            animation: pageBlurReveal 0.92s var(--ease-out-expo) 0.82s both;
+        }
+
+        .page-entry #tab-nav {
+            animation: pageBlurReveal 1.04s var(--ease-out-expo) 0.94s both;
+        }
+
+        .page-entry .tab-btn {
+            animation: pageBlurReveal 0.84s var(--ease-out-expo) calc(1.08s + (var(--tab-entry-index, 0) * 72ms)) both;
+        }
+
+        .page-entry #tab-content-container {
+            animation: pageBlurReveal 1.08s var(--ease-out-expo) 1.12s both;
+        }
+
+        .page-entry #analysis-actions {
+            animation: pageBlurReveal 0.94s var(--ease-out-expo) 1.46s both;
+        }
 
         /* --- Title --- */
         .title-wrapper { position: relative; display: inline-block; }
+
+        #main-title {
+            font-family: 'Unna', 'Times New Roman', serif;
+            font-weight: 400;
+            letter-spacing: 0.035em;
+        }
+
+        .profile-subtitle {
+            font-family: 'Corinthia', cursive;
+            font-size: clamp(1.65rem, 3.5vw, 2.25rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: 0.02em;
+            text-transform: none;
+        }
 
         .title-glow {
             position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 140%; height: 140%;
-            background: radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
-            z-index: -1; opacity: 0.7;
-            animation: pulseGlow 5s ease-in-out infinite;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0) 70%);
+            z-index: -1; opacity: 0.55;
+            animation: none;
         }
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.96); }
-            50% { opacity: 0.75; transform: translate(-50%, -50%) scale(1.03); }
-        }
-
-        .star-anim {
-            animation: starFloat 4.5s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(176,141,62,0.45));
-        }
-        .star-anim.delay { animation-delay: 2s; }
-        @keyframes starFloat {
-            0%, 100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0.85; }
-            50% { transform: translateY(-6px) scale(1.1) rotate(12deg); opacity: 1; }
-        }
-
         /* --- Hero panel --- */
         .hero-panel {
-            background: rgba(255,255,255,0.42);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
-            border: 1px solid rgba(255,255,255,0.65);
-            border-radius: 1.25rem;
-            box-shadow: 0 20px 50px -22px rgba(24,24,27,0.12);
+            background: rgba(255,255,255,0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.78);
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px -8px rgba(24,24,27,0.28);
             padding: clamp(1.75rem, 6vw, 3rem) clamp(1.25rem, 6vw, 2.5rem) clamp(1.5rem, 5vw, 2.25rem);
         }
 
         /* --- Card --- */
         .card {
-            background-color: rgba(255, 255, 255, 0.62);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-radius: 1.1rem;
-            box-shadow: 0 10px 36px -8px rgba(31, 38, 135, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.75);
+            background-color: rgba(255,255,255,0.74);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 0.9rem;
+            box-shadow: 0 4px 10px -8px rgba(24,24,27,0.28);
+            border: 1px solid rgba(255,255,255,0.8);
             padding: clamp(1.25rem, 4vw, 2.2rem) clamp(1.1rem, 4vw, 2.1rem) clamp(1.4rem, 4vw, 2.2rem);
             position: relative;
             z-index: 1;
@@ -142,39 +246,33 @@
             gap: 0.85rem;
             margin-bottom: 1.5rem;
             padding-bottom: 1.1rem;
-            border-bottom: 1px solid rgba(228, 228, 231, 0.7);
+            border-bottom: 1px solid var(--border);
         }
 
         .icon-wrapper {
-            background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(244,244,245,0.7));
+            background: var(--accent-wash);
             color: var(--gold);
             width: 2.7rem; height: 2.7rem;
             border-radius: 0.8rem;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(176,141,62,0.12), inset 0 0 0 1px rgba(176,141,62,0.18);
-        }
-
-        .section-num {
-            font-family: 'Rozha One', serif;
-            font-size: 0.8rem;
-            color: var(--gold);
-            letter-spacing: 0.1em;
+            box-shadow: inset 0 0 0 1px rgba(24,24,27,0.1);
         }
 
         .section-title {
             font-weight: 500;
-            font-size: clamp(1.15rem, 4vw, 1.45rem);
-            color: #18181b;
+            font-size: clamp(1.15rem, 3vw, 1.35rem);
+            color: var(--ink);
             line-height: 1.3;
             word-break: break-word;
+            text-wrap: balance;
         }
 
         .section-subtitle {
             font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            color: #8a8a92;
+            color: var(--ink-muted);
             font-weight: 400;
             margin-top: 0.2rem;
             display: block;
@@ -210,22 +308,28 @@
         }
 
         .field-input {
-            background: rgba(255,255,255,0.5);
-            border: none;
-            border-bottom: 1.5px solid rgba(161, 161, 170, 0.3);
-            padding: 0.55rem 0.6rem;
+            background: rgba(255,255,255,0.76);
+            border: 1px solid rgba(255,255,255,0.82);
+            padding: 0.7rem 0.75rem;
             font-size: clamp(1rem, 3.2vw, 1.08rem);
             font-weight: 400;
-            color: #18181b;
+            color: var(--ink);
             outline: none;
-            transition: all 0.25s ease;
-            border-radius: 0.4rem 0.4rem 0 0;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            border-radius: 0.65rem;
             width: 100%;
             min-width: 0;
         }
         .field-input:focus {
-            border-bottom: 1.5px solid var(--gold);
-            background-color: rgba(255, 255, 255, 0.85);
+            border-color: var(--gold);
+            background-color: var(--surface);
+            box-shadow: 0 0 0 3px rgba(102,85,245,0.12);
+        }
+
+        .field-textarea {
+            min-height: 4.4rem;
+            resize: vertical;
+            line-height: 1.55;
         }
 
         /* --- Progress track --- */
@@ -235,6 +339,9 @@
             gap: 0;
             max-width: 640px;
             margin: 0 auto;
+            overflow-x: auto;
+            padding: 0.25rem;
+            scrollbar-width: thin;
         }
         .progress-node {
             display: flex;
@@ -242,29 +349,43 @@
             flex: 1;
         }
         .progress-dot {
+            width: 44px; height: 44px;
+            border-radius: 0.5rem;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            flex-shrink: 0;
+            cursor: pointer;
+            position: relative;
+        }
+        .progress-dot::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
             width: 9px; height: 9px;
             border-radius: 9999px;
             background: #d4d4d8;
             border: 1px solid rgba(255,255,255,0.9);
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: all 0.25s ease;
+            transform: translate(-50%, -50%);
+            transition: transform 0.2s var(--ease-out-quart), background-color 0.2s ease, box-shadow 0.2s ease;
         }
-        .progress-dot:hover { transform: scale(1.3); }
-        .progress-dot.done { background: var(--gold); }
+        .progress-dot:hover::before { transform: translate(-50%, -50%) scale(1.3); }
+        .progress-dot:focus-visible { outline: 3px solid rgba(24,24,27,0.28); outline-offset: -3px; }
+        .progress-dot.done::before { background: var(--gold); }
         .progress-dot.current {
-            background: #18181b;
-            width: 12px; height: 12px;
-            box-shadow: 0 0 0 4px rgba(176,141,62,0.22);
+            background: transparent;
+            width: 44px; height: 44px;
+            box-shadow: none;
         }
+        .progress-dot.current::before { width: 12px; height: 12px; background: var(--gold); box-shadow: 0 0 0 4px rgba(24,24,27,0.12); animation: currentPulse 0.55s var(--ease-out-quart) both; }
         .progress-line {
             flex-grow: 1;
             height: 1.5px;
             background: #e4e4e7;
             margin: 0 3px;
         }
-        .progress-line.done { background: linear-gradient(90deg, var(--gold-soft), var(--gold)); }
+        .progress-line.done { background: var(--gold); }
 
         .tab-rail { position: relative; }
         .tab-rail::before {
@@ -276,11 +397,12 @@
             opacity: 0.6;
         }
         .tab-rail {
-            background: rgba(255,255,255,0.4);
-            border: 1px solid rgba(255,255,255,0.6);
-            border-radius: 1.1rem;
-            padding: 0.6rem;
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 0.9rem;
+            padding: 0.55rem;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             overscroll-behavior-x: contain;
             scroll-behavior: smooth;
         }
@@ -289,31 +411,48 @@
             display: flex; align-items: center; gap: 0.65rem;
             text-align: left;
             padding: 0.65rem 0.85rem;
-            border-radius: 0.75rem;
-            font-size: clamp(0.85rem, 3vw, 1rem);
+            border: 1px solid transparent;
+            border-radius: 0.65rem;
+            font-size: 0.9rem;
             font-weight: 500;
-            color: #71717a;
-            transition: all 0.2s ease;
+            color: var(--ink-muted);
+            transition: transform 0.16s var(--ease-out-quart), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }
+
+        .tab-btn:focus-visible {
+            outline: 3px solid rgba(24,24,27,0.24);
+            outline-offset: 2px;
+        }
+
+        .tab-btn:active { transform: scale(0.985); }
 
         .tab-btn .tab-icon {
             width: 30px; height: 30px;
             border-radius: 0.6rem;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(244,244,245,0.7);
+            background: var(--surface-muted);
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: transform 0.2s var(--ease-out-quart), background-color 0.2s ease, color 0.2s ease;
         }
 
-        .tab-btn:hover { background-color: rgba(255, 255, 255, 0.55); color: #27272a; }
-        .tab-btn:hover .tab-icon { background: rgba(255,255,255,0.9); }
+        .tab-btn:hover { background-color: var(--surface-muted); color: var(--ink); }
+        .tab-btn:hover .tab-icon { background: var(--accent-wash); transform: translateY(-1px); }
 
         .tab-btn.active {
             background-color: #18181b;
+            border-color: #18181b;
             color: #ffffff;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.14);
         }
-        .tab-btn.active .tab-icon { background: rgba(255,255,255,0.12); color: var(--gold-soft); }
+        .tab-btn.active .tab-icon { background: rgba(255,255,255,0.12); color: #ffffff; }
+
+        .tab-group { display: flex; flex-direction: column; gap: 0.2rem; }
+        .tab-group-label {
+            color: var(--ink-soft);
+            font-size: 0.64rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            padding: 0.45rem 0.75rem 0.2rem;
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -324,48 +463,1165 @@
         .corner-frame::after {
             content: '';
             position: absolute;
-            width: 20px; height: 20px;
-            border-color: var(--gold-soft);
+            width: 18px;
+            height: 18px;
+            border-color: rgba(24,24,27,0.32);
             border-style: solid;
-            opacity: 0.75;
             pointer-events: none;
+            z-index: 2;
         }
         .corner-frame::before {
-            top: -1px; left: -1px;
-            border-width: 2px 0 0 2px;
-            border-top-left-radius: inherit;
+            top: 7px;
+            left: 7px;
+            border-width: 1px 0 0 1px;
         }
         .corner-frame::after {
-            bottom: -1px; right: -1px;
-            border-width: 0 2px 2px 0;
-            border-bottom-right-radius: inherit;
+            right: 7px;
+            bottom: 7px;
+            border-width: 0 1px 1px 0;
         }
 
         .memo-card {
             position: relative;
             padding: clamp(1.5rem, 4vw, 2.1rem) clamp(1.5rem, 5vw, 2.4rem);
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.76);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border-radius: 0.9rem;
-            border: 1px solid rgba(176,141,62,0.28);
-            box-shadow: 0 24px 50px -24px rgba(24,24,27,0.22);
+            border: 1px solid var(--border);
+            box-shadow: none;
         }
 
-        /* --- Print --- */
-        @media print {
-            body { background: white; padding: 0; }
-            body::before, body::after { display: none; }
-            .no-print { display: none !important; }
-            .card { background-color: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; border: 1px solid #e4e4e7; break-inside: avoid; margin-bottom: 1.75rem; padding: 1.5rem; }
-            .tab-content { display: block !important; opacity: 1 !important; }
-            #main-layout { display: block; }
-            .field-input { border-bottom: 1px solid #d4d4d8; background: none; }
-            .fields-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+        /* --- Report actions --- */
+        .analysis-actions {
+            margin: 2rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
+
+        .analysis-actions .action-copy {
+            color: var(--ink-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .analysis-actions .action-copy strong {
+            display: block;
+            color: var(--ink);
+            font-size: 1.05rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .analysis-actions .action-buttons {
+            display: flex;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .analysis-btn {
+            border-radius: 0.7rem;
+            padding: 0.7rem 1rem;
+            font-size: 0.86rem;
+            font-weight: 500;
+            transition: transform 0.18s var(--ease-out-quart), box-shadow 0.2s ease, background-color 0.2s ease;
+            min-height: 42px;
+        }
+
+        .analysis-btn:focus-visible {
+            outline: 3px solid rgba(24,24,27,0.24);
+            outline-offset: 2px;
+        }
+
+        .analysis-btn:hover { transform: translateY(-1px); }
+        .analysis-btn:active { transform: translateY(1px) scale(0.985); }
+        .analysis-btn.is-complete { animation: actionComplete 0.42s var(--ease-out-quart); }
+        .analysis-btn.is-warning { animation: actionWarning 0.36s var(--ease-out-quart); }
+
+        .analysis-btn.primary {
+            color: #fff;
+            background: #18181b;
+            box-shadow: 0 4px 10px -6px rgba(24,24,27,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analysis-btn.primary.is-complete::after {
+            content: '';
+            position: absolute;
+            inset: -20% auto -20% -35%;
+            width: 24%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+            transform: translateX(-120%) skewX(-16deg);
+            pointer-events: none;
+            animation: buttonSheen 0.6s var(--ease-out-quart) both;
+        }
+
+        .analysis-btn.primary:hover { background: #27272a; }
+
+        .analysis-btn.secondary {
+            color: var(--ink-muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+        }
+
+        .analysis-btn.secondary:hover { background: var(--surface-muted); border-color: var(--gold-soft); }
+
+        .analysis-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .analysis-status {
+            flex-basis: 100%;
+            color: var(--ink-soft);
+            font-size: 0.78rem;
+            min-height: 1.2rem;
+        }
+
+        .analysis-status.is-warning {
+            color: #9a3412;
+            font-weight: 600;
+        }
+
+        .report-actions {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0 1rem;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.86);
+            border-radius: 0.85rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            overflow: visible;
+            position: relative;
+            z-index: 50;
+        }
+
+        .report-actions.visible { display: flex; }
+
+        .report-view-buttons {
+            display: flex;
+            gap: 0.2rem;
+            padding: 0.2rem;
+            background: rgba(244,244,245,0.78);
+            border-radius: 0.65rem;
+        }
+
+        .report-view-btn {
+            border: 0;
+            border-radius: 0.55rem;
+            background: transparent;
+            color: #52525b;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.6rem 0.8rem;
+            transition: transform 0.16s var(--ease-out-quart), background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .report-view-btn:active { transform: scale(0.985); }
+
+        .report-view-btn:hover { background: rgba(255,255,255,0.72); color: #18181b; }
+        .report-view-btn.active { background: #18181b; border-color: #18181b; color: #ffffff; }
+
+        .analysis-btn.reset {
+            background: transparent;
+            border: 1px solid rgba(24,24,27,0.2);
+            color: #52525b;
+        }
+
+        .analysis-btn.reset:hover { background: rgba(255,255,255,0.72); color: #18181b; }
+
+        .report-copy-menu { margin-left: auto; position: relative; }
+        .report-copy-menu summary {
+            align-items: center;
+            background: #18181b;
+            border-radius: 0.6rem;
+            color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            font-size: 0.82rem;
+            font-weight: 500;
+            gap: 0.45rem;
+            min-height: 40px;
+            padding: 0.62rem 0.85rem;
+            list-style: none;
+            user-select: none;
+        }
+
+        .report-copy-menu summary::-webkit-details-marker { display: none; }
+        .report-copy-menu summary::after { content: '⌄'; font-size: 0.9rem; transition: transform 0.2s var(--ease-out-quart); }
+        .report-copy-menu[open] summary::after { transform: rotate(180deg); }
+        .report-copy-menu summary:focus-visible { outline: 3px solid rgba(24,24,27,0.24); outline-offset: 2px; }
+
+        .report-copy-menu-panel {
+            background: #ffffff;
+            border: 1px solid #e4e4e7;
+            border-radius: 0.7rem;
+            display: grid;
+            gap: 0.2rem;
+            min-width: 230px;
+            padding: 0.38rem;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.45rem);
+            z-index: 40;
+        }
+
+        .copy-menu-item {
+            background: transparent;
+            border: 0;
+            border-radius: 0.5rem;
+            color: #3f3f46;
+            cursor: pointer;
+            font-size: 0.8rem;
+            min-height: 40px;
+            padding: 0.65rem 0.75rem;
+            text-align: left;
+        }
+
+        .copy-menu-item:hover { background: #f4f4f5; color: #18181b; }
+        .copy-menu-item:focus-visible { outline: 2px solid #18181b; outline-offset: -2px; }
+        .copy-menu-item:disabled { cursor: not-allowed; opacity: 0.42; }
+
+        .report-highlight {
+            background: #fafafa;
+            border: 1px solid #e4e4e7;
+            border-radius: 0.45rem;
+            padding: 0.95rem 1rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .report-highlight strong {
+            display: block;
+            color: #18181b;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+        }
+
+        .coach-card {
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.92);
+            border-radius: 1rem;
+            margin: 1.6rem 0;
+            overflow: hidden;
+            padding: clamp(1.2rem, 3.6vw, 2rem);
+        }
+
+        .coach-kicker {
+            color: #52525b;
+            font-family: 'Prompt', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            margin: 0.9rem 0 0.45rem;
+        }
+
+        .coach-card h3 {
+            color: #18181b;
+            font-family: inherit;
+            font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            line-height: 1.3;
+            margin: 0;
+            text-wrap: balance;
+        }
+
+        .coach-opening {
+            color: #3f3f46;
+            font-size: 0.94rem;
+            line-height: 1.8;
+            margin: 0.7rem 0 0;
+            max-width: 72ch;
+        }
+
+        .coach-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .coach-grid > div {
+            background: #ffffff;
+            border: 1px solid #e4e4e7;
+            border-radius: 0.45rem;
+            padding: 0.85rem 0.95rem;
+        }
+
+        .coach-grid > div:first-child {
+            background: #f1f7f2;
+            border-color: #b9d5bf;
+        }
+
+        .coach-grid > div:first-child h4 { color: #356247; }
+
+        .coach-grid > div:last-child {
+            background: #fbf7ed;
+            border-color: #e1cea0;
+        }
+
+        .coach-grid > div:last-child h4 { color: #765b2a; }
+
+        .coach-grid h4,
+        .coach-prompt h4 {
+            color: #27272a;
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin: 0;
+        }
+
+        .coach-grid ul {
+            color: #52525b;
+            font-size: 0.79rem;
+            line-height: 1.7;
+            margin: 0.45rem 0 0;
+            padding-left: 1.1rem;
+        }
+
+        .coach-grid li + li { margin-top: 0.28rem; }
+
+        .coach-prompt {
+            background: #222225;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 0.7rem;
+            color: #ffffff;
+            margin-top: 1rem;
+            padding: 0.7rem 0.8rem;
+        }
+
+        .coach-prompt-head {
+            align-items: baseline;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 0.75rem;
+            justify-content: space-between;
+        }
+
+        .coach-prompt-head h4 {
+            color: #ffffff;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+        }
+        .coach-prompt-head span { color: #d4d4d8; font-size: 0.62rem; }
+
+        .coach-prompt pre {
+            color: #f4f4f5;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Prompt', monospace;
+            font-size: 0.68rem;
+            line-height: 1.55;
+            margin: 0.45rem 0 0;
+            max-height: 230px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .coach-note {
+            color: #71717a;
+            font-size: 0.73rem;
+            line-height: 1.65;
+            margin: 0.8rem 0 0;
+        }
+
+        .coach-layout {
+            align-items: center;
+            border-bottom: 1px solid rgba(24,24,27,0.14);
+            display: grid;
+            gap: clamp(1rem, 3vw, 2.25rem);
+            grid-template-columns: minmax(0, 1fr) minmax(130px, 180px);
+            padding-bottom: 1.25rem;
+        }
+
+        .coach-main {
+            min-width: 0;
+        }
+        .coach-main > .coach-speech { max-width: 100%; }
+
+        .coach-content {
+            margin-top: 1.25rem;
+        }
+
+        .coach-character {
+            align-self: start;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: start;
+            min-width: 0;
+            padding-top: 0;
+        }
+
+        .coach-character img {
+            display: block;
+            filter: drop-shadow(0 12px 10px rgba(24,24,27,0.14));
+            height: auto;
+            max-height: 230px;
+            object-fit: contain;
+            width: min(100%, 176px);
+        }
+
+        .coach-speech {
+            background: rgba(255,255,255,0.64);
+            border: 1px solid rgba(24,24,27,0.23);
+            border-radius: 0.7rem;
+            color: #3f3f46;
+            font-size: 0.84rem;
+            line-height: 1.72;
+            margin: 0;
+            max-width: none;
+            padding: 0.9rem 1rem;
+            position: relative;
+        }
+
+        .coach-speech::after {
+            border-bottom: 7px solid transparent;
+            border-left: 8px solid rgba(255,255,255,0.84);
+            border-top: 7px solid transparent;
+            right: -8px;
+            top: 1.25rem;
+            content: '';
+            position: absolute;
+        }
+
+        .coach-speech strong {
+            color: #18181b;
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.3rem;
+        }
+
+        .coach-speech p { margin: 0; }
+
+        /* --- Premium lower panel composition --- */
+        .coach-insights {
+            align-items: start;
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .coach-insight {
+            background: #ffffff;
+            border: 1px solid #ded8cb;
+            border-radius: 0.7rem;
+            min-height: 0;
+            padding: 1rem 1.1rem 0.95rem;
+        }
+
+        .coach-insight--positive {
+            background: rgba(244,249,245,0.76);
+            border-color: rgba(104,145,113,0.42);
+        }
+
+        .coach-insight--next {
+            background: rgba(250,247,238,0.8);
+            border-color: rgba(168,137,69,0.42);
+        }
+
+        .coach-insight h4 {
+            align-items: center;
+            color: #27272a;
+            display: flex;
+            font-size: 0.9rem;
+            font-weight: 700;
+            gap: 0.5rem;
+            line-height: 1.35;
+            margin: 0;
+        }
+
+        .coach-insight--positive h4 { color: #356247; }
+        .coach-insight--next h4 { color: #765b2a; }
+
+        .coach-insight h4::before {
+            align-items: center;
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            content: '✓';
+            display: inline-flex;
+            flex: 0 0 1.25rem;
+            font-size: 0.68rem;
+            height: 1.25rem;
+            justify-content: center;
+            width: 1.25rem;
+        }
+
+        .coach-insight--next h4::before { content: '+'; }
+
+        .coach-insight ul {
+            color: #52525b;
+            font-size: 0.78rem;
+            line-height: 1.65;
+            list-style: none;
+            margin: 0.75rem 0 0;
+            padding: 0;
+        }
+
+        .coach-insight li {
+            border-top: 1px solid rgba(161,161,170,0.28);
+            padding: 0.55rem 0 0.1rem;
+        }
+
+        .coach-prompt {
+            display: grid;
+            grid-template-columns: 10.5rem minmax(0, 1fr);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .coach-prompt-head {
+            align-items: flex-start;
+            background: #202023;
+            border-right: 1px solid #52525b;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+            justify-content: flex-start;
+            padding: 0.85rem 0.9rem;
+        }
+
+        .coach-prompt-head span { line-height: 1.45; }
+
+        .coach-prompt pre {
+            margin: 0;
+            max-height: 190px;
+            padding: 0.85rem 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .coach-grid { grid-template-columns: 1fr; }
+            .coach-insights { grid-template-columns: 1fr; }
+            .coach-layout {
+                display: grid;
+                gap: 0.75rem;
+                grid-template-columns: 1fr;
+                min-height: 0;
+                padding-bottom: 1rem;
+            }
+            .coach-main { padding-right: 0; width: 100%; }
+            .coach-character { order: -1; }
+            .coach-character { align-items: center; position: static; width: 100%; }
+            .coach-character img { max-height: 180px; width: min(48%, 160px); }
+            .coach-kicker { margin-top: 0.75rem; }
+            .coach-card h3 { font-size: 1.35rem; line-height: 1.35; }
+            .coach-speech { font-size: 0.86rem; }
+            .coach-prompt { grid-template-columns: 1fr; }
+            .coach-prompt-head { border-bottom: 1px solid #52525b; border-right: 0; }
+            .coach-speech::after {
+                border-bottom: 8px solid #ffffff;
+                border-left: 7px solid transparent;
+                border-right: 7px solid transparent;
+                border-top: 0;
+                bottom: auto;
+                right: 24px;
+                top: -8px;
+            }
+        }
+
+        .flag-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 0.7rem;
+            margin-top: 0.75rem;
+        }
+
+        .flag-card {
+            border: 1px solid #e4e4e7;
+            border-radius: 0.45rem;
+            padding: 0.75rem;
+            min-height: 106px;
+            animation: flagReveal 0.28s var(--ease-out-quart) both;
+            animation-delay: calc(var(--flag-index, 0) * 45ms);
+        }
+
+        .flag-card h4 { font-size: 0.9rem; margin: 0 0 0.3rem; }
+        .flag-card p { font-size: 0.78rem; line-height: 1.55; margin: 0; }
+        .flag-green { background: #f0fdf4; border-color: #bbf7d0; }
+        .flag-green h4 { color: #166534; }
+        .flag-yellow { background: #fefce8; border-color: #fde68a; }
+        .flag-yellow h4 { color: #854d0e; }
+        .flag-red { background: #fff7ed; border-color: #fed7aa; }
+        .flag-red h4 { color: #9a3412; }
+        .flag-black { background: #f4f4f5; border-color: #a1a1aa; }
+        .flag-black h4 { color: #18181b; }
+
+        .report-sheet {
+            display: none;
+            background: #fff;
+            color: #18181b;
+            border: 1px solid #e4e4e7;
+            border-radius: 0.45rem;
+            padding: clamp(1.5rem, 4vw, 3rem);
+            margin: 1.5rem 0 3rem;
+        }
+
+        .report-sheet.visible { display: block; animation: reportReveal 0.46s var(--ease-out-expo) both; }
+        .report-sheet.is-fading-out {
+            display: block;
+            animation: reportFadeOut 0.24s var(--ease-out-quart) both;
+            pointer-events: none;
+        }
+
+        .report-header {
+            border-bottom: 2px solid #18181b;
+            padding-bottom: 1.15rem;
+            margin-bottom: 1.7rem;
+        }
+
+        .report-kicker {
+            color: #71717a;
+            font-size: 0.7rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+        }
+
+        .report-title {
+            color: #18181b;
+            font-size: clamp(1.55rem, 4vw, 2.1rem);
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .report-meta {
+            color: #52525b;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem 1.5rem;
+            font-size: 0.86rem;
+            margin-top: 0.75rem;
+        }
+
+        .report-block {
+            break-inside: avoid;
+            margin-bottom: 1.6rem;
+        }
+
+        .report-block h3 {
+            border-bottom: 1px solid #d4d4d8;
+            color: #18181b;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin: 0 0 0.75rem;
+            padding-bottom: 0.42rem;
+        }
+
+        .report-block p,
+        .report-block li {
+            color: #3f3f46;
+            font-size: 0.95rem;
+            line-height: 1.75;
+        }
+
+        .report-block p { margin: 0; }
+
+        .report-block ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.8rem 1.5rem;
+        }
+
+        .report-fact {
+            border-bottom: 1px solid #f4f4f5;
+            padding: 0.45rem 0;
+        }
+
+        .report-fact dt {
+            color: #71717a;
+            font-size: 0.76rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .report-fact dd {
+            color: #27272a;
+            font-size: 0.92rem;
+            line-height: 1.55;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .report-note {
+            background: #fafafa;
+            border: 1px solid #e4e4e7;
+            color: #52525b;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            padding: 0.8rem 0.95rem;
+        }
+
+        .manual-copy-panel {
+            background: #ffffff;
+            border: 1px solid #d4d4d8;
+            border-radius: 0.55rem;
+            margin: 1rem 0 1.5rem;
+            padding: 1rem;
+        }
+
+        .manual-copy-panel[hidden] { display: none; }
+        .manual-copy-panel h3 { color: #18181b; font-size: 1rem; font-weight: 600; margin: 0 0 0.35rem; }
+        .manual-copy-panel p { color: #52525b; font-size: 0.86rem; line-height: 1.6; margin: 0 0 0.75rem; }
+        .manual-copy-panel textarea {
+            width: 100%;
+            min-height: 14rem;
+            resize: vertical;
+            border: 1px solid #a1a1aa;
+            border-radius: 0.4rem;
+            color: #18181b;
+            background: #fafafa;
+            font: 400 0.9rem/1.65 'Prompt', sans-serif;
+            padding: 0.8rem;
+        }
+        .manual-copy-panel textarea:focus-visible { outline: 3px solid rgba(102,85,245,0.34); outline-offset: 2px; }
+        .manual-copy-actions { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.75rem; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto !important; }
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            .char-anim,
+            .animated-subtitle,
+            .flag-card,
+            .analysis-btn.is-complete,
+            .analysis-btn.is-warning { opacity: 1 !important; transform: none !important; animation: none !important; }
+            .tab-content.fade-in-up { animation: fadeInUp 0.12s linear both !important; }
+            .tab-content.is-fading-out { animation: tabFadeOut 0.12s linear both !important; }
+            .report-sheet.visible { animation: reportReveal 0.12s linear both !important; }
+            .report-sheet.is-fading-out { animation: reportFadeOut 0.12s linear both !important; }
+            .progress-dot.current::before,
+            .analysis-btn.primary.is-complete::after { animation: none !important; }
+            .page-entry #site-header,
+            .page-entry .memo-card,
+            .page-entry #progress-track,
+            .page-entry #progress-label,
+            .page-entry #tab-nav,
+            .page-entry .tab-btn,
+            .page-entry #tab-content-container,
+            .page-entry #analysis-actions {
+                animation: none !important;
+                filter: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .report-grid { grid-template-columns: 1fr; }
+            .flag-grid { grid-template-columns: 1fr 1fr; }
+            .analysis-actions { align-items: flex-start; }
+            .analysis-actions .action-buttons { width: 100%; }
+            .analysis-btn { flex: 1 1 150px; }
+            .report-actions { align-items: stretch; }
+            .report-view-buttons { flex: 1 1 100%; width: 100%; }
+            .report-view-btn { flex: 1; }
+            .report-copy-menu { margin-left: 0; width: 100%; }
+            .report-copy-menu summary { justify-content: center; width: 100%; }
+            .report-copy-menu-panel { left: 0; min-width: 0; right: 0; width: 100%; }
+        }
+
+        @media (max-width: 1023px) {
+            .tab-group { flex-direction: row; gap: 0.2rem; }
+            .tab-group-label { display: none; }
+            .tab-rail { align-items: center; }
+        }
+
+        /* --- Editorial report composition --- */
+        @keyframes reportSectionIn {
+            from { opacity: 0; transform: translateY(18px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes reportHeaderIn {
+            from { opacity: 0; transform: translateY(12px) scale(0.985); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .report-sheet {
+            background: rgba(255,255,255,0.82);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.92);
+            border-radius: 1rem;
+            font-family: 'Prompt', sans-serif;
+            margin: 1.75rem 0 3.5rem;
+            overflow: hidden;
+            padding: clamp(1.1rem, 3vw, 2.35rem);
+            position: relative;
+        }
+
+        .report-sheet::before {
+            border-left: 1px solid rgba(24,24,27,0.16);
+            border-top: 1px solid rgba(24,24,27,0.16);
+            content: '';
+            height: 22px;
+            left: 14px;
+            pointer-events: none;
+            position: absolute;
+            top: 14px;
+            width: 22px;
+        }
+
+        .report-sheet::after {
+            border-bottom: 1px solid rgba(24,24,27,0.16);
+            border-right: 1px solid rgba(24,24,27,0.16);
+            bottom: 14px;
+            content: '';
+            height: 22px;
+            pointer-events: none;
+            position: absolute;
+            right: 14px;
+            width: 22px;
+        }
+
+        .report-header.report-hero {
+            border-bottom: 0;
+            margin-bottom: 1.9rem;
+            padding: 0.35rem 0 1.8rem;
+            position: relative;
+        }
+
+        .report-header.report-hero::after {
+            background: #18181b;
+            bottom: 0;
+            content: '';
+            height: 2px;
+            left: 0;
+            position: absolute;
+            width: min(100%, 34rem);
+        }
+
+        .report-kicker {
+            color: #71717a;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            margin-bottom: 0.6rem;
+        }
+
+        .report-title {
+            color: #18181b;
+            font-family: 'Prompt', sans-serif;
+            font-size: clamp(1.7rem, 3.7vw, 2.75rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.08;
+            max-width: 20ch;
+            text-wrap: balance;
+        }
+
+        .report-meta {
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .report-meta span {
+            background: rgba(255,255,255,0.66);
+            border: 1px solid rgba(24,24,27,0.14);
+            border-radius: 999px;
+            color: #52525b;
+            font-size: 0.75rem;
+            line-height: 1;
+            padding: 0.52rem 0.7rem;
+        }
+
+        .report-feature {
+            align-items: center;
+            background: #f2eee6;
+            border: 0;
+            border-radius: 0.9rem;
+            display: block;
+            margin: 0 0 1.85rem;
+            overflow: hidden;
+            padding: clamp(1.05rem, 2.5vw, 1.55rem);
+            position: relative;
+        }
+
+        .report-feature::before {
+            color: rgba(24,24,27,0.12);
+            content: '“';
+            font-family: 'Playfair Display', serif;
+            font-size: 8rem;
+            line-height: 0.6;
+            position: absolute;
+            right: 0.8rem;
+            top: 1rem;
+        }
+
+        .report-feature strong {
+            color: #18181b;
+            display: block;
+            font-size: 1.12rem;
+            margin-bottom: 0.55rem;
+            position: relative;
+        }
+
+        .report-feature p {
+            color: #3f3f46;
+            font-size: clamp(0.94rem, 1.5vw, 1.08rem);
+            line-height: 1.72;
+            margin: 0;
+            max-width: 58ch;
+            position: relative;
+        }
+
+        .report-block {
+            margin-bottom: 1.7rem;
+        }
+
+        .report-block h3 {
+            align-items: center;
+            border-bottom: 0;
+            color: #18181b;
+            display: flex;
+            font-family: 'Prompt', sans-serif;
+            font-size: clamp(1.15rem, 2vw, 1.45rem);
+            font-weight: 700;
+            gap: 0.55rem;
+            letter-spacing: -0.015em;
+            margin: 0 0 0.75rem;
+            padding: 0;
+        }
+
+        .report-block h3::before {
+            background: #18181b;
+            border-radius: 999px;
+            content: '';
+            display: block;
+            flex: 0 0 0.42rem;
+            height: 0.42rem;
+        }
+
+        .report-block h3::after {
+            background: #d4d4d8;
+            content: '';
+            display: block;
+            flex: 1;
+            height: 1px;
+            margin-left: 0.15rem;
+        }
+
+        .report-block p,
+        .report-block li {
+            color: #3f3f46;
+            font-size: 0.92rem;
+            line-height: 1.78;
+        }
+
+        .report-block--summary p {
+            font-size: clamp(0.96rem, 1.55vw, 1.06rem);
+            max-width: 70ch;
+        }
+
+        .report-journey-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin: 0 0 2.15rem;
+        }
+
+        .report-journey-grid .report-block {
+            background: rgba(255,255,255,0.58);
+            border: 1px solid rgba(24,24,27,0.12);
+            border-radius: 0.8rem;
+            margin: 0;
+            padding: 1.15rem 1.2rem 1.25rem;
+        }
+
+        .report-journey-grid .report-block h3 {
+            font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+        }
+
+        .approach-meter {
+            display: flex;
+            gap: 0.42rem;
+            margin: 1rem 0 0.85rem;
+        }
+
+        .approach-meter span {
+            background: #e4e4e7;
+            border-radius: 999px;
+            height: 0.42rem;
+            overflow: hidden;
+            position: relative;
+            width: 2.1rem;
+        }
+
+        .approach-meter span.is-filled { background: #18181b; }
+
+        .report-block--behavior {
+            background: rgba(247,247,248,0.72);
+            border-radius: 0.8rem;
+            margin-bottom: 1.8rem;
+            padding: 1.2rem 1.25rem 1.35rem;
+        }
+
+        .report-block--communication ul {
+            display: grid;
+            gap: 0.45rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .report-block--communication li {
+            border-bottom: 1px solid rgba(24,24,27,0.12);
+            padding: 0.52rem 0 0.62rem 1.15rem;
+            position: relative;
+        }
+
+        .report-block--communication li::before {
+            color: #71717a;
+            content: '↗';
+            left: 0;
+            position: absolute;
+            top: 0.55rem;
+        }
+
+        .flag-grid {
+            gap: 0.9rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            margin-top: 1rem;
+        }
+
+        .flag-card {
+            border: 1px solid rgba(24,24,27,0.12);
+            border-radius: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 150px;
+            padding: 0.9rem;
+            transition: transform 0.25s var(--ease-out-quart), border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .flag-card:hover {
+            border-color: rgba(24,24,27,0.3);
+            transform: translateY(-4px);
+        }
+
+        .flag-card h4 {
+            align-items: center;
+            display: flex;
+            font-size: 1rem;
+            gap: 0.45rem;
+            margin: 0 0 0.55rem;
+        }
+
+        .flag-card h4::before {
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            content: '';
+            display: block;
+            flex: 0 0 0.55rem;
+            height: 0.55rem;
+        }
+
+        .flag-card p { font-size: 0.78rem; line-height: 1.65; }
+        .flag-card p + p { margin-top: 0.55rem; }
+        .flag-green { background: rgba(239,249,242,0.78); border-top: 3px solid #79a987; }
+        .flag-yellow { background: rgba(252,248,225,0.82); border-top: 3px solid #d0ad45; }
+        .flag-red { background: rgba(255,245,236,0.84); border-top: 3px solid #d27a52; }
+        .flag-black { background: rgba(241,241,244,0.84); border-top: 3px solid #71717a; }
+
+        .report-note {
+            background: transparent;
+            border: 0;
+            border-top: 1px solid #d4d4d8;
+            color: #71717a;
+            display: flex;
+            font-size: 0.8rem;
+            gap: 0.6rem;
+            line-height: 1.65;
+            margin: 0 0 2rem;
+            padding: 0.8rem 0 0;
+        }
+
+        .report-note::before {
+            color: #52525b;
+            content: 'ⓘ';
+            flex: 0 0 auto;
+            font-size: 0.9rem;
+        }
+
+        .report-sheet.visible .report-hero {
+            animation: reportHeaderIn 0.62s var(--ease-out-expo) both;
+        }
+
+        .report-sheet.visible .report-feature,
+        .report-sheet.visible .report-block,
+        .report-sheet.visible .report-note,
+        .report-sheet.visible .coach-card {
+            animation: reportSectionIn 0.68s var(--ease-out-expo) both;
+            animation-delay: calc(0.1s + (var(--report-index, 0) * 0.08s));
+        }
+
+        .report-sheet.visible .report-feature { animation-delay: 0.12s; }
+        .report-sheet.visible .report-note { animation-delay: 0.58s; }
+        .report-sheet.visible .coach-card { animation-delay: 0.68s; }
+        .report-sheet.visible .coach-insight { animation: reportSectionIn 0.55s var(--ease-out-expo) both; }
+        .report-sheet.visible .coach-insight:nth-child(2) { animation-delay: 0.12s; }
+        .report-sheet.visible .coach-prompt { animation: reportSectionIn 0.58s var(--ease-out-expo) 0.2s both; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .report-sheet.visible .report-hero,
+            .report-sheet.visible .report-feature,
+            .report-sheet.visible .report-block,
+            .report-sheet.visible .report-note,
+            .report-sheet.visible .coach-card,
+            .report-sheet.visible .coach-insight,
+            .report-sheet.visible .coach-prompt {
+                animation: none !important;
+                filter: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+
+        @media (max-width: 840px) {
+            .report-feature { grid-template-columns: 1fr; }
+            .report-feature::before { font-size: 6rem; }
+            .report-journey-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 640px) {
+            .report-sheet { border-radius: 0.85rem; padding: 1.1rem; }
+            .report-title { font-size: clamp(1.8rem, 9vw, 2.45rem); max-width: none; }
+            .report-meta span { font-size: 0.7rem; }
+            .report-feature { padding: 1.15rem; }
+            .report-feature p { font-size: 1rem; }
+            .flag-grid { grid-template-columns: 1fr 1fr; }
+            .flag-card { min-height: 150px; padding: 0.85rem; }
+            .flag-card p { font-size: 0.8rem; }
+        }
+
     </style>
 </head>
-<body class="antialiased py-6 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col items-center">
+<body class="page-entry antialiased py-6 sm:py-12 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col items-center">
 
     <main class="w-full max-w-6xl mx-auto flex-grow">
 
@@ -380,17 +1636,9 @@
         </svg>
 
         <!-- Header -->
-        <div class="text-center mb-10 relative z-10 pt-4">
+        <div id="site-header" class="text-center mb-10 relative z-10 pt-4">
             <div class="absolute inset-0 flex items-center justify-center -z-10 opacity-[0.04] pointer-events-none">
                 <svg width="220" height="220" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/></svg>
-            </div>
-
-            <!-- Top utility row: print button never overlaps the title -->
-            <div class="no-print flex justify-end mb-6 sm:absolute sm:right-0 sm:top-4">
-                <button onclick="window.print()" class="bg-white/80 border border-zinc-200 shadow-sm text-zinc-600 hover:text-zinc-900 hover:border-[color:var(--gold-soft)] px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium transition-all flex items-center gap-2 group">
-                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
-                    พิมพ์เอกสาร
-                </button>
             </div>
 
             <div class="title-wrapper">
@@ -398,32 +1646,30 @@
                 <div class="absolute -top-5 sm:-top-7 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--gold-soft)] to-transparent opacity-70"></div>
                 <div class="absolute -bottom-3 sm:-bottom-5 left-1/2 -translate-x-1/2 w-28 sm:w-40 h-[1px] bg-gradient-to-r from-transparent via-[color:var(--gold-soft)] to-transparent opacity-70"></div>
 
-                <h1 class="font-rozha text-4xl sm:text-6xl md:text-7xl tracking-[0.01em] sm:tracking-[0.03em] text-zinc-900 mb-2 flex justify-center items-center gap-2 sm:gap-7 drop-shadow-sm leading-tight px-1" id="main-title">
-                    <svg class="hidden sm:block w-9 h-9 star-anim flex-shrink-0" viewBox="0 0 24 24" fill="url(#star-grad)"><path d="M12 2L12.8 9.2L20 10L12.8 10.8L12 18L11.2 10.8L4 10L11.2 9.2L12 2Z"/></svg>
+                <h1 class="text-4xl sm:text-6xl md:text-7xl text-zinc-900 mb-2 flex justify-center items-center gap-2 sm:gap-4 leading-tight px-1" id="main-title">
                     <span class="animated-text">CHARACTER SHEET</span>
-                    <svg class="hidden sm:block w-9 h-9 star-anim delay flex-shrink-0" viewBox="0 0 24 24" fill="url(#star-grad)"><path d="M12 2L12.8 9.2L20 10L12.8 10.8L12 18L11.2 10.8L4 10L11.2 9.2L12 2Z"/></svg>
                 </h1>
             </div>
 
-            <p class="text-zinc-500 text-[0.68rem] sm:text-sm tracking-[0.2em] sm:tracking-[0.36em] uppercase mt-5 sm:mt-8 animated-subtitle opacity-0 font-medium px-2">Comprehensive Profile Template</p>
+            <p class="profile-subtitle text-zinc-600 mt-5 sm:mt-7 animated-subtitle opacity-0 px-2">Comprehensive Profile Template</p>
 
             <!-- How To -->
-            <div class="mt-9 max-w-3xl mx-auto text-left opacity-0 fade-in-up" style="animation-delay: 0.5s;">
+            <div class="mt-9 max-w-3xl mx-auto text-left">
                 <div class="memo-card corner-frame">
                     <div class="flex items-center gap-2.5 mb-3">
-                        <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="url(#star-grad)"><path d="M12 2L12.8 9.2L20 10L12.8 10.8L12 18L11.2 10.8L4 10L11.2 9.2L12 2Z"/></svg>
-                        <span class="text-[0.68rem] sm:text-xs tracking-[0.28em] uppercase font-medium text-[color:var(--gold)]">Guide</span>
+                        <span class="w-2 h-2 rounded-full bg-[color:var(--gold)] flex-shrink-0"></span>
+                        <span class="text-[0.68rem] sm:text-xs tracking-[0.18em] uppercase font-semibold text-[color:var(--gold-ink)]">เริ่มต้นใช้งาน</span>
                     </div>
 
-                    <h2 class="font-serif italic text-xl sm:text-2xl font-medium text-zinc-800 mb-1 tracking-wide">
-                        How To Character Chart
+                    <h2 class="font-sans text-xl sm:text-2xl font-semibold text-zinc-800 mb-1 tracking-tight">
+                        เริ่มสร้างตัวละครของคุณ
                     </h2>
-                    <p class="text-zinc-500 text-sm sm:text-[0.92rem] font-sans mb-4">เขียนตัวละครยังไงดี?</p>
+                    <p class="text-zinc-500 text-sm sm:text-[0.92rem] font-sans mb-4">กรอกเท่าที่รู้ แล้วค่อยเติมรายละเอียดภายหลังได้</p>
 
                     <div class="w-10 h-[1px] bg-gradient-to-r from-[color:var(--gold-soft)] to-transparent mb-4"></div>
 
                     <p class="text-base sm:text-[1.05rem] text-zinc-600 leading-relaxed font-light max-w-2xl">
-                        ฟอร์ม Character Chart ทั่วไป เหมาะสำหรับสร้างตัวละครนิยาย, OC, RPG, AI Character, FiveM RP หรือ Visual Novel ครอบคลุมทั้งรูปลักษณ์ บุคลิก จิตวิทยา ความสัมพันธ์ และพัฒนาการของตัวละครในเรื่อง เลือกใช้ได้ตามต้องการเลยค่ะ
+                        แบ่งข้อมูลเป็นหมวดสั้น ๆ เพื่อช่วยให้เห็นตัวละครชัดขึ้น ทั้งรูปลักษณ์ บุคลิก วิธีพูด ความสัมพันธ์ และเส้นทางการเติบโต เหมาะกับนิยาย OC, RPG, AI Character และ Visual Novel
                     </p>
                 </div>
             </div>
@@ -432,22 +1678,68 @@
         <!-- Progress -->
         <div class="no-print mb-10 px-2">
             <div class="progress-track" id="progress-track"></div>
-            <p class="text-center text-[0.65rem] tracking-[0.2em] uppercase text-zinc-400 mt-3" id="progress-label">Section 01 of 10</p>
+            <p class="text-center text-[0.65rem] tracking-[0.12em] text-zinc-600 mt-3" id="progress-label">ส่วนที่ 1 จาก 10</p>
         </div>
 
         <!-- Layout -->
         <div id="main-layout" class="flex flex-col lg:flex-row gap-8 items-start">
 
-            <nav class="no-print w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-6 relative z-20">
-                <div class="tab-rail flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible no-scrollbar" id="tab-nav"></div>
+            <nav class="no-print w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-6 relative z-20" aria-label="ส่วนข้อมูลตัวละคร">
+                <div class="tab-rail flex lg:flex-col gap-1.5 overflow-x-auto lg:overflow-visible no-scrollbar" id="tab-nav" role="tablist" aria-orientation="vertical"></div>
             </nav>
 
             <div class="w-full flex-grow relative min-h-[600px] z-10" id="tab-content-container"></div>
 
         </div>
+
+        <!-- Character analysis and plain report -->
+        <section id="analysis-actions" class="analysis-actions no-print" aria-labelledby="analysis-title">
+            <div class="action-copy">
+                <strong id="analysis-title">สรุปตัวละคร</strong>
+                กรอกอย่างน้อย 1 ช่องได้เลย ระบบจะสรุปจากข้อมูลที่มี และไม่บังคับให้ครบทุกช่อง
+            </div>
+            <div class="action-buttons">
+                <button type="button" id="analyze-btn" class="analysis-btn primary">วิเคราะห์ตัวละคร</button>
+                <button type="button" id="reset-btn" class="analysis-btn reset">รีเซ็ตข้อมูล</button>
+            </div>
+            <div id="analysis-status" class="analysis-status" role="status" aria-live="polite"></div>
+        </section>
+
+        <section id="report-actions" class="report-actions no-print" aria-label="ตัวเลือกผลลัพธ์">
+            <div class="report-view-buttons">
+                <button type="button" id="summary-view-btn" class="report-view-btn active" aria-pressed="true">รายงานสรุปตัวละคร</button>
+                <button type="button" id="raw-view-btn" class="report-view-btn" aria-pressed="false">ข้อมูลที่กรอก</button>
+            </div>
+            <details class="report-copy-menu" id="report-copy-menu">
+                <summary>คัดลอก</summary>
+                <div class="report-copy-menu-panel">
+                    <button type="button" id="copy-summary-btn" class="copy-menu-item" disabled>รายงานสรุปตัวละคร</button>
+                    <button type="button" id="copy-coach-btn" class="copy-menu-item" disabled>SYSTEM NOTE / OOC</button>
+                    <button type="button" id="copy-raw-btn" class="copy-menu-item" disabled>ข้อมูลที่กรอก</button>
+                </div>
+            </details>
+        </section>
+
+        <section id="manual-copy-panel" class="manual-copy-panel no-print" aria-labelledby="manual-copy-title" hidden>
+            <h3 id="manual-copy-title">คัดลอกด้วยตนเอง</h3>
+            <p id="manual-copy-description">เบราว์เซอร์ไม่อนุญาตให้คัดลอกอัตโนมัติ เลือกข้อความด้านล่างแล้วกดคัดลอกได้เลย</p>
+            <textarea id="manual-copy-text" readonly aria-describedby="manual-copy-description"></textarea>
+            <div class="manual-copy-actions">
+                <button type="button" id="select-copy-text-btn" class="analysis-btn primary">เลือกข้อความทั้งหมด</button>
+                <button type="button" id="close-copy-panel-btn" class="analysis-btn secondary">ปิด</button>
+            </div>
+        </section>
+
+        <section id="report-panel" class="report-sheet" aria-labelledby="report-title" aria-hidden="true">
+            <div id="report-content"></div>
+        </section>
+
+        <section id="raw-report-panel" class="report-sheet" aria-labelledby="raw-report-title" aria-hidden="true">
+            <div id="raw-report-content"></div>
+        </section>
     </main>
 
-    <div class="mt-16 text-center text-zinc-400 font-medium tracking-wider text-xs pb-8 pt-10 flex flex-col items-center gap-2 opacity-0 fade-in-up max-w-6xl w-full mx-auto relative" style="animation-delay: 0.8s;">
+    <div class="mt-16 text-center text-zinc-600 font-medium tracking-wider text-xs pb-8 pt-10 flex flex-col items-center gap-2 max-w-6xl w-full mx-auto relative">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-zinc-300 to-transparent"></div>
         <svg class="w-3.5 h-3.5 mb-1" viewBox="0 0 24 24" fill="url(#star-grad)"><path d="M12 2L12.8 9.2L20 10L12.8 10.8L12 18L11.2 10.8L4 10L11.2 9.2L12 2Z"/></svg>
         <p class="tracking-[0.25em]">CHARACTER SHEET TEMPLATE</p>
@@ -468,6 +1760,16 @@
             { id: 10, title: "ข้อมูลลึก & การพัฒนา", icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z", subtitle: "DEEP CHARACTER & GROWTH" }
         ];
 
+        const sectionGroups = [
+            { label: 'พื้นฐาน', ids: [1, 2, 3] },
+            { label: 'ตัวตนและพฤติกรรม', ids: [4, 5, 6, 7, 8] },
+            { label: 'ความสัมพันธ์และการเติบโต', ids: [9, 10] }
+        ];
+
+        function getSectionGroup(sectionId) {
+            return sectionGroups.find(group => group.ids.includes(sectionId)) || sectionGroups[0];
+        }
+
         const formFields = {
             1: ["ชื่อ", "ชื่อเล่น", "อายุ", "วันเกิด", "เพศ", "เชื้อชาติ/สัญชาติ", "ศาสนา", "อาชีพ", "ระดับการศึกษา", "สถานะทางเศรษฐกิจและสังคม", "บ้านเกิด", "ที่อยู่ปัจจุบัน"],
             2: ["รูปร่าง/ส่วนสูง/น้ำหนัก", "สีผม/สีตา/สีผิว", "จุดสังเกต (รอยแผล/ปาน/รอยสัก)", "สไตล์การแต่งตัว", "ท่าทางการยืน/เดิน", "สุขภาพโดยรวม/โรคประจำตัว"],
@@ -482,13 +1784,75 @@
         };
 
         let activeTabId = 1;
+        let latestAnalysis = null;
+        let saveDraftTimer = null;
+        let analysisResetTimer = null;
+        let tabSwitchTimer = null;
+        let reportTransitionTimer = null;
+        const DRAFT_STORAGE_KEY = 'character-sheet-draft-v3';
 
         document.addEventListener('DOMContentLoaded', () => {
             renderSections();
+            const restoredCount = restoreDraft();
+            attachDraftAutosave();
             renderTabs();
             renderProgress();
             animateTitle();
+            document.getElementById('analyze-btn')?.addEventListener('click', analyzeCharacter);
+            document.getElementById('reset-btn')?.addEventListener('click', resetCharacterSheet);
+            document.getElementById('summary-view-btn')?.addEventListener('click', () => switchReportView('summary'));
+            document.getElementById('raw-view-btn')?.addEventListener('click', () => switchReportView('raw'));
+            document.getElementById('copy-summary-btn')?.addEventListener('click', () => { copyReportText('report-panel', 'รายงานสรุป'); closeCopyMenu(); });
+            document.getElementById('copy-coach-btn')?.addEventListener('click', () => { copyCoachPrompt(); closeCopyMenu(); });
+            document.getElementById('copy-raw-btn')?.addEventListener('click', () => { copyReportText('raw-report-panel', 'ข้อมูลที่กรอก'); closeCopyMenu(); });
+            document.getElementById('select-copy-text-btn')?.addEventListener('click', selectManualCopyText);
+            document.getElementById('close-copy-panel-btn')?.addEventListener('click', closeManualCopyPanel);
+            document.getElementById('analysis-status').textContent = restoredCount
+                ? `กู้คืนแบบร่างจากเครื่องนี้แล้ว ${restoredCount} ช่อง — ข้อมูลจะบันทึกอัตโนมัติ`
+                : 'เวอร์ชันทดลอง: สรุปข้อมูลภายในหน้าเว็บ ยังไม่ได้ส่งข้อมูลออกไปภายนอก — ข้อมูลจะบันทึกอัตโนมัติ';
         });
+
+        function attachDraftAutosave() {
+            document.querySelectorAll('[data-field-key]').forEach(field => {
+                field.addEventListener('input', () => {
+                    window.clearTimeout(saveDraftTimer);
+                    saveDraftTimer = window.setTimeout(saveDraft, 250);
+                    if (field.value.trim()) {
+                        document.getElementById('analysis-status')?.classList.remove('is-warning');
+                        document.getElementById('analyze-btn')?.classList.remove('is-warning');
+                    }
+                });
+            });
+        }
+
+        function saveDraft() {
+            const draft = {};
+            document.querySelectorAll('[data-field-key]').forEach(field => {
+                if (field.value.trim()) draft[field.dataset.fieldKey] = field.value;
+            });
+            try {
+                if (Object.keys(draft).length) localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+                else localStorage.removeItem(DRAFT_STORAGE_KEY);
+            } catch (error) {
+                document.getElementById('analysis-status').textContent = 'บันทึกแบบร่างอัตโนมัติไม่ได้ แต่ยังกรอกและวิเคราะห์ต่อได้';
+            }
+        }
+
+        function restoreDraft() {
+            try {
+                const draft = JSON.parse(localStorage.getItem(DRAFT_STORAGE_KEY) || '{}');
+                let restoredCount = 0;
+                Object.entries(draft).forEach(([key, value]) => {
+                    const field = [...document.querySelectorAll('[data-field-key]')].find(item => item.dataset.fieldKey === key);
+                    if (!field) return;
+                    field.value = value;
+                    restoredCount += 1;
+                });
+                return restoredCount;
+            } catch (error) {
+                return 0;
+            }
+        }
 
         function renderProgress() {
             const track = document.getElementById('progress-track');
@@ -500,7 +1864,9 @@
                 node.className = 'progress-node';
 
                 const dot = document.createElement('button');
-                dot.setAttribute('aria-label', `${sec.title}`);
+                dot.type = 'button';
+                dot.setAttribute('aria-label', `ไปยังส่วน ${sec.title}`);
+                if (sec.id === activeTabId) dot.setAttribute('aria-current', 'step');
                 dot.className = 'progress-dot' + (sec.id === activeTabId ? ' current' : (sec.id < activeTabId ? ' done' : ''));
                 dot.onclick = () => switchTab(sec.id);
                 node.appendChild(dot);
@@ -513,8 +1879,7 @@
                 track.appendChild(node);
             });
             if (label) {
-                const numStr = String(activeTabId).padStart(2, '0');
-                label.textContent = `Section ${numStr} of ${sections.length} · ${sections.find(s => s.id === activeTabId).title}`;
+                label.textContent = `ส่วนที่ ${activeTabId} จาก ${sections.length} · ${sections.find(s => s.id === activeTabId).title}`;
             }
         }
 
@@ -523,26 +1888,19 @@
             container.innerHTML = '';
 
             sections.forEach(sec => {
-                const isHidden = sec.id !== activeTabId ? 'hidden' : 'fade-in-up';
-                const numStr = String(sec.id).padStart(2, '0');
+                const isHidden = sec.id !== activeTabId;
                 const fieldCount = (formFields[sec.id] || []).length;
                 const colsClass = fieldCount >= 6 ? 'cols-2' : '';
 
-                const fieldsHtml = (formFields[sec.id] || []).map(label => `
-                    <div class="field-item">
-                        <span class="field-label">${label}</span>
-                        <input type="text" class="field-input">
-                    </div>
-                `).join('');
+                const fieldsHtml = (formFields[sec.id] || []).map(label => renderFieldControl(sec.id, label)).join('');
 
                 const sectionHtml = `
-                    <div id="sec-${sec.id}" class="tab-content card corner-frame ${isHidden}">
+                    <section id="sec-${sec.id}" class="tab-content card corner-frame ${isHidden ? 'hidden' : 'fade-in-up'}" role="tabpanel" aria-labelledby="btn-${sec.id}" aria-hidden="${isHidden}"${isHidden ? ' hidden' : ''}>
                         <div class="section-header">
                             <div class="icon-wrapper">
                                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="${sec.icon}" /></svg>
                             </div>
                             <div>
-                                <span class="section-num">${numStr}</span>
                                 <div class="section-title">${sec.title}</div>
                                 <span class="section-subtitle">${sec.subtitle}</span>
                             </div>
@@ -550,10 +1908,25 @@
                         <div class="fields-grid ${colsClass}">
                             ${fieldsHtml}
                         </div>
-                    </div>
+                    </section>
                 `;
                 container.insertAdjacentHTML('beforeend', sectionHtml);
             });
+        }
+
+        function renderFieldControl(sectionId, label) {
+            const longField = /ประวัติ|ความทรงจำ|เหตุการณ์|ความลับ|ความปรารถนา|เป้าหมาย|ปรัชญา|คำพูด|กิริยา|สิ่งที่รัก|สิ่งที่เกลียด|ภาพลักษณ์|ตอนจบ|ใครรู้/.test(label);
+            const fieldKey = `${sectionId}-${label.normalize('NFKD').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '')}`;
+            const control = longField
+                ? `<textarea class="field-input field-textarea" rows="2" data-field-key="${fieldKey}" data-field-label="${label}" aria-label="${label}"></textarea>`
+                : `<input type="text" class="field-input" data-field-key="${fieldKey}" data-field-label="${label}" aria-label="${label}">`;
+
+            return `
+                <div class="field-item">
+                    <label class="field-label" for="field-${fieldKey}">${label}</label>
+                    ${control.replace('data-field-key', `id="field-${fieldKey}" data-field-key`)}
+                </div>
+            `;
         }
 
         function animateTitle() {
@@ -580,41 +1953,97 @@
         function renderTabs() {
             const navContainer = document.getElementById('tab-nav');
             if (!navContainer) return;
-            sections.forEach(sec => {
-                const btn = document.createElement('button');
-                btn.className = `tab-btn whitespace-nowrap lg:whitespace-normal w-full min-w-max lg:min-w-0 ${sec.id === activeTabId ? 'active' : ''}`;
-                btn.onclick = () => switchTab(sec.id);
-                btn.id = `btn-${sec.id}`;
-                btn.innerHTML = `
-                    <span class="tab-icon">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${sec.icon}" /></svg>
-                    </span>
-                    <span>${sec.id}. ${sec.title}</span>
-                `;
-                navContainer.appendChild(btn);
+            navContainer.innerHTML = '';
+            sectionGroups.forEach(group => {
+                const groupEl = document.createElement('div');
+                groupEl.className = 'tab-group';
+
+                const groupLabel = document.createElement('div');
+                groupLabel.className = 'tab-group-label';
+                groupLabel.textContent = group.label;
+                groupEl.appendChild(groupLabel);
+
+                sections.filter(sec => group.ids.includes(sec.id)).forEach(sec => {
+                    const btn = document.createElement('button');
+                    const isActive = sec.id === activeTabId;
+                    btn.type = 'button';
+                    btn.setAttribute('role', 'tab');
+                    btn.setAttribute('aria-selected', String(isActive));
+                    btn.setAttribute('aria-controls', `sec-${sec.id}`);
+                    btn.tabIndex = isActive ? 0 : -1;
+                    btn.className = `tab-btn whitespace-nowrap lg:whitespace-normal w-full min-w-max lg:min-w-0 ${isActive ? 'active' : ''}`;
+                    btn.onclick = () => switchTab(sec.id);
+                    btn.onkeydown = event => {
+                        const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : ['ArrowUp', 'ArrowLeft'].includes(event.key) ? -1 : 0;
+                        if (!direction) return;
+                        event.preventDefault();
+                        const nextIndex = (sections.findIndex(section => section.id === activeTabId) + direction + sections.length) % sections.length;
+                        switchTab(sections[nextIndex].id);
+                        document.getElementById(`btn-${sections[nextIndex].id}`)?.focus();
+                    };
+                    btn.id = `btn-${sec.id}`;
+                    btn.style.setProperty('--tab-entry-index', String(sec.id - 1));
+                    btn.innerHTML = `
+                        <span class="tab-icon">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${sec.icon}" /></svg>
+                        </span>
+                        <span>${sec.title}</span>
+                    `;
+                    groupEl.appendChild(btn);
+                });
+                navContainer.appendChild(groupEl);
             });
         }
 
         function switchTab(newId) {
             if (activeTabId === newId) return;
+            window.clearTimeout(tabSwitchTimer);
+            const oldTabId = activeTabId;
             const oldBtn = document.getElementById(`btn-${activeTabId}`);
-            if (oldBtn) oldBtn.classList.remove('active');
+            if (oldBtn) {
+                oldBtn.classList.remove('active');
+                oldBtn.setAttribute('aria-selected', 'false');
+                oldBtn.tabIndex = -1;
+            }
             const newBtn = document.getElementById(`btn-${newId}`);
-            if (newBtn) newBtn.classList.add('active');
+            if (newBtn) {
+                newBtn.classList.add('active');
+                newBtn.setAttribute('aria-selected', 'true');
+                newBtn.tabIndex = 0;
+            }
 
-            const oldContent = document.getElementById(`sec-${activeTabId}`);
-            if (oldContent) {
-                oldContent.classList.add('hidden');
-                oldContent.classList.remove('fade-in-up');
-            }
+            const oldContent = document.getElementById(`sec-${oldTabId}`);
             const newContent = document.getElementById(`sec-${newId}`);
-            if (newContent) {
-                newContent.classList.remove('hidden');
-                void newContent.offsetWidth;
-                newContent.classList.add('fade-in-up');
+            const revealNewTab = () => {
+                if (oldContent) {
+                    oldContent.classList.add('hidden');
+                    oldContent.classList.remove('fade-in-up', 'is-fading-out');
+                    oldContent.hidden = true;
+                    oldContent.inert = true;
+                    oldContent.setAttribute('aria-hidden', 'true');
+                }
+                if (newContent) {
+                    newContent.classList.remove('hidden');
+                    newContent.hidden = false;
+                    newContent.inert = false;
+                    newContent.setAttribute('aria-hidden', 'false');
+                    newContent.classList.remove('fade-in-up');
+                    void newContent.offsetWidth;
+                    newContent.classList.add('fade-in-up');
+                }
+                activeTabId = newId;
+                renderProgress();
+            };
+
+            if (oldContent) {
+                oldContent.classList.add('is-fading-out');
+                oldContent.setAttribute('aria-hidden', 'true');
+                oldContent.inert = true;
+                const transitionDuration = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 120 : 280;
+                tabSwitchTimer = window.setTimeout(revealNewTab, transitionDuration);
+            } else {
+                revealNewTab();
             }
-            activeTabId = newId;
-            renderProgress();
 
             // Center the active tab within the nav strip only (mobile horizontal scroll),
             // without letting the browser scroll the whole page to follow it.
@@ -622,10 +2051,636 @@
                 const navEl = document.getElementById('tab-nav');
                 if (navEl && window.innerWidth < 1024) {
                     const targetLeft = newBtn.offsetLeft - (navEl.clientWidth / 2) + (newBtn.clientWidth / 2);
-                    navEl.scrollTo({ left: targetLeft, behavior: 'smooth' });
+                    navEl.scrollTo({ left: targetLeft, behavior: getScrollBehavior() });
                 }
             }
         }
+
+        function getScrollBehavior() {
+            return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function collectCharacterData() {
+            const records = [];
+            document.querySelectorAll('[data-field-label]').forEach(field => {
+                const value = field.value.trim();
+                if (!value) return;
+                const sectionElement = field.closest('.tab-content');
+                const sectionId = Number(sectionElement?.id?.replace('sec-', '')) || 0;
+                const section = sections.find(item => item.id === sectionId);
+                records.push({
+                    sectionId,
+                    sectionTitle: section?.title || 'ข้อมูลเพิ่มเติม',
+                    label: field.dataset.fieldLabel,
+                    value
+                });
+            });
+            return records;
+        }
+
+        function findValue(records, candidates) {
+            for (const candidate of candidates) {
+                const exact = records.find(record => record.label === candidate && record.value);
+                if (exact) return exact.value;
+            }
+            for (const candidate of candidates) {
+                const partial = records.find(record => record.label.includes(candidate) && record.value);
+                if (partial) return partial.value;
+            }
+            return '';
+        }
+
+        function listItems(items, fallback) {
+            const present = items.filter(Boolean);
+            if (!present.length) return `<li>${escapeHtml(fallback)}</li>`;
+            return present.map(item => `<li>${escapeHtml(item)}</li>`).join('');
+        }
+
+        function fact(label, value) {
+            if (!value) return '';
+            return `<div class="report-fact"><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`;
+        }
+
+        function hasNegatedContext(text, index, phrase) {
+            const before = text.slice(Math.max(0, index - 18), index).replace(/\s+/g, '');
+            const after = text.slice(index + phrase.length, index + phrase.length + 18).replace(/\s+/g, '');
+            const negators = ['ไม่', 'มิได้', 'ไม่เคย', 'ไม่ชอบ', 'เกลียด', 'ต่อต้าน', 'หลีกเลี่ยง', 'รังเกียจ', 'ปฏิเสธ', 'ห้าม'];
+            if (negators.some(word => before.includes(word))) return true;
+            if (['ทำร้าย', 'ข่มขู่', 'บังคับ', 'ล่วงละเมิด'].includes(phrase) && before.includes('ถูก')) return true;
+            if (phrase === 'ควบคุม' && /^(อารมณ์|ตัวเอง|ตนเอง|สถานการณ์)/.test(after)) return true;
+            return false;
+        }
+
+        function findContextualSignals(records, phrases) {
+            const matches = [];
+            records.forEach(record => {
+                const value = record.value.replace(/\s+/g, ' ');
+                phrases.forEach(phrase => {
+                    let cursor = 0;
+                    while (cursor < value.length) {
+                        const index = value.indexOf(phrase, cursor);
+                        if (index === -1) break;
+                        if (!hasNegatedContext(value, index, phrase)) {
+                            const start = Math.max(0, index - 28);
+                            const end = Math.min(value.length, index + phrase.length + 38);
+                            matches.push({ term: phrase, evidence: value.slice(start, end).trim(), label: record.label });
+                        }
+                        cursor = index + phrase.length;
+                    }
+                });
+            });
+            return matches.filter((match, index, all) => all.findIndex(item => item.term === match.term && item.evidence === match.evidence) === index).slice(0, 3);
+        }
+
+        function buildRelationshipFlags(records) {
+            const relevantRecords = records.filter(record => [4, 5, 8, 9, 10].includes(record.sectionId));
+            const definitions = {
+                green: {
+                    label: 'ธงเขียว',
+                    description: 'พฤติกรรมที่มักสะท้อนความเคารพ ความปลอดภัย และความรับผิดชอบต่อความสัมพันธ์',
+                    phrases: ['เคารพขอบเขต', 'รับฟัง', 'สื่อสารตรงไปตรงมา', 'รักษาคำพูด', 'รับผิดชอบ', 'ขอโทษ', 'ให้เกียรติ']
+                },
+                yellow: {
+                    label: 'ธงเหลือง',
+                    description: 'จุดที่ควรสื่อสารและติดตามบริบท เพราะอาจกลายเป็นปัญหาได้เมื่อเกิดซ้ำ',
+                    phrases: ['หึง', 'ขี้ระแวง', 'เก็บความรู้สึก', 'พูดน้อย', 'ดื้อ', 'หนีปัญหา', 'กลัวการถูกทิ้ง']
+                },
+                red: {
+                    label: 'ธงแดง',
+                    description: 'พฤติกรรมที่อาจทำให้ความสัมพันธ์ไม่ปลอดภัยหรือไม่สมดุล หากเกิดขึ้นจริงและเกิดซ้ำ',
+                    phrases: ['ควบคุม', 'บงการ', 'โกหก', 'ดูถูก', 'แยกออกจากเพื่อน', 'โทษคนอื่น', 'อารมณ์รุนแรง']
+                },
+                black: {
+                    label: 'ธงดำ',
+                    description: 'สัญญาณรุนแรงที่ควรถือเป็นข้อควรระวังสูง เช่น การคุกคาม การบังคับ หรือการใช้ความรุนแรง',
+                    phrases: ['ทำร้าย', 'ข่มขู่', 'บังคับ', 'สะกดรอย', 'ล่วงละเมิด', 'ใช้ความรุนแรง', 'ทำร้ายร่างกาย']
+                }
+            };
+
+            const evidence = {};
+            const signals = {};
+            Object.entries(definitions).forEach(([key, definition]) => {
+                evidence[key] = findContextualSignals(relevantRecords, definition.phrases);
+                signals[key] = evidence[key].map(match => match.term);
+            });
+
+            const highest = signals.black.length ? 'black'
+                : signals.red.length ? 'red'
+                    : signals.yellow.length ? 'yellow'
+                        : signals.green.length ? 'green' : null;
+            const overall = highest === 'black' ? 'พบคำที่อาจสัมพันธ์กับธงดำ ควรอ่านหลักฐานและบริบทก่อนสรุป'
+                : highest === 'red' ? 'พบคำที่อาจสัมพันธ์กับธงแดง ควรดูว่าพฤติกรรมเกิดขึ้นจริงและเกิดซ้ำหรือไม่'
+                    : highest === 'yellow' ? 'พบจุดที่ควรสื่อสารหรือสำรวจเพิ่มเติมในความสัมพันธ์'
+                        : highest === 'green' ? 'พบแนวโน้มของพฤติกรรมที่ช่วยให้ความสัมพันธ์ปลอดภัยขึ้น'
+                            : 'ยังมีข้อมูลไม่พอสำหรับประเมินธงความสัมพันธ์';
+            return { definitions, signals, evidence, highest, overall };
+        }
+
+        function buildCharacterCoach(analysis, records) {
+            const hasCore = Boolean(analysis.personality || analysis.values);
+            const hasDrive = Boolean(analysis.goal || analysis.fear);
+            const hasVoice = Boolean(analysis.communication || analysis.catchphrase || analysis.bodyLanguage);
+            const hasContext = Boolean(analysis.history || analysis.relationship);
+            const name = analysis.name || 'ตัวละครนี้';
+
+            const strengths = [];
+            if (hasCore) strengths.push('มีแกนบุคลิกและค่านิยมที่ช่วยให้การตัดสินใจของตัวละครมีทิศทาง');
+            if (hasDrive) strengths.push('มีแรงปรารถนาและจุดเปราะบาง ทำให้สร้างความขัดแย้งหรือพัฒนาการได้จริง');
+            if (hasVoice) strengths.push('มีเสียงและกิริยาที่ช่วยให้ผู้อ่านแยกตัวละครออกจากคนอื่นได้');
+            if (hasContext) strengths.push('มีบริบทชีวิตหรือความสัมพันธ์ที่ช่วยให้ตัวละครดูมีมิติ ไม่ได้แบนอยู่แค่คำบรรยาย');
+            if (!strengths.length) strengths.push('มีจุดเริ่มต้นที่ดี และพร้อมต่อยอดให้กลายเป็นคาแรกเตอร์ที่มีภาพจำชัดขึ้น');
+
+            const suggestions = [];
+            if (!analysis.communication) suggestions.push('ล็อกรูปแบบการพูดเพิ่มอีกนิด เช่น ความยาวประโยค ระดับความสุภาพ คำที่ชอบใช้ และคำที่ไม่พูด');
+            if (!analysis.goal || !analysis.fear) suggestions.push('เพิ่มคู่ “สิ่งที่ต้องการ” กับ “สิ่งที่กลัว” เพื่อให้ทุกการตอบสนองมีเหตุผลภายใน');
+            if (!analysis.catchphrase && !analysis.bodyLanguage) suggestions.push('เติม cue เล็ก ๆ เช่น ท่าทางเวลาคิด เวลาประหม่า หรือวิธีหลบเลี่ยงคำถาม เพื่อให้ AI แสดงออกซ้ำได้');
+            if (!analysis.history) suggestions.push('เพิ่มเหตุการณ์เปลี่ยนชีวิต 1–2 เหตุการณ์ เพื่ออธิบายว่าทำไมตัวละครถึงมีมุมมองแบบนี้');
+            if (!suggestions.length) suggestions.push('กำหนดขอบเขตที่ตัวละครจะไม่ทำ และเงื่อนไขที่ทำให้เขายอมเปลี่ยน เพื่อช่วยกันคาแรกเตอร์หลุดในฉากยาว ๆ');
+
+            const personalityLine = analysis.personality || 'ยึดบุคลิกที่ระบุในข้อมูลหลักเป็นแกนกลาง';
+            const goalLine = analysis.goal || 'มีเป้าหมายตามบริบทของฉาก แต่ต้องสอดคล้องกับค่านิยมของตัวละคร';
+            const fearLine = analysis.fear || 'มีจุดเปราะบางที่ตอบสนองตามเหตุการณ์ ไม่ใช่เปลี่ยนไปมาโดยไม่มีเหตุผล';
+            const voiceLine = analysis.communication || 'พูดด้วยโทนที่คงที่ และไม่เปลี่ยนระดับความสนิทโดยไม่มีพัฒนาการ';
+            const bodyLine = analysis.bodyLanguage || analysis.catchphrase || 'ใช้กิริยาหรือรายละเอียดเล็ก ๆ ที่สะท้อนอารมณ์ของตัวละคร';
+
+            const prompt = [
+                '[SYSTEM NOTE / OOC — CHARACTER CONSISTENCY]',
+                `ROLE: คุณกำลังสวมบทเป็น ${name}`,
+                'OBJECTIVE: รักษาคาแรกเตอร์ให้สม่ำเสมอตลอดการสนทนา และตอบสนองผ่านข้อมูลด้านล่าง',
+                '',
+                'CHARACTER CORE',
+                `- บุคลิกและค่านิยม: ${personalityLine}${analysis.values ? ` / ${analysis.values}` : ''}`,
+                `- เป้าหมายหรือแรงขับ: ${goalLine}`,
+                `- ความกลัวหรือจุดเปราะบาง: ${fearLine}`,
+                `- วิธีพูด: ${voiceLine}`,
+                `- ภาษากายและรายละเอียดที่ควรแสดง: ${bodyLine}`,
+                '',
+                'BEHAVIOR RULES',
+                '1. อย่าเปลี่ยนบุคลิก ความทรงจำ หรือระดับความสัมพันธ์โดยไม่มีเหตุการณ์รองรับ',
+                '2. หากข้อมูลใหม่ขัดกับแกนเดิม ให้ยึดแกนเดิมและขอทิศทางจากผู้ใช้ก่อน',
+                '3. อย่าอธิบายกฎนี้ออกมาในบทสนทนา ให้แสดงผ่านคำพูด การตัดสินใจ และภาษากายของตัวละคร',
+                '[END SYSTEM NOTE / OOC]'
+            ].join('\n');
+
+            const opening = records.length >= 18
+                ? `ว้าว ตอนนี้ ${name} มีโครงตัวละครที่แน่นมากแล้ว ทั้งแกนตัวตน แรงขับ และรายละเอียดที่ทำให้จำได้ง่าย ถ้านำไปใช้กับ AI roleplay จะมีวัตถุดิบพอให้คุมโทนได้สม่ำเสมอขึ้นมาก`
+                : records.length >= 8
+                    ? `${name} เริ่มมีภาพจำที่ชัดแล้วนะ มีแกนบางส่วนที่ต่อยอดเป็นบทสนทนาได้จริง ถ้าล็อกรายละเอียดอีกเล็กน้อย AI จะจับน้ำเสียงและเหตุผลของตัวละครได้แม่นขึ้น`
+                    : `${name} มีจุดเริ่มต้นที่ดีแล้ว ตอนนี้ยังเหมาะกับการเติม “เหตุผลเบื้องหลัง” และ “วิธีแสดงออก” อีกนิด เพื่อให้ AI ไม่ต้องเดาคาแรกเตอร์แทนคุณมากเกินไป`;
+
+            return { opening, strengths, suggestions, prompt };
+        }
+
+        function buildAnalysis(records) {
+            const name = findValue(records, ['ชื่อ']) || 'ยังไม่ได้ระบุชื่อ';
+            const nickname = findValue(records, ['ชื่อเล่น']);
+            const age = findValue(records, ['อายุ']);
+            const occupation = findValue(records, ['อาชีพ']);
+            const personality = findValue(records, ['นิสัยเด่น/อุปนิสัยพื้นฐาน', 'ประเภทบุคลิกภาพ', 'มองโลกในแง่ดี/ร้าย']);
+            const strengths = findValue(records, ['จุดแข็ง/จุดอ่อน']);
+            const values = findValue(records, ['ปรัชญาชีวิต/ค่านิยมหลัก', 'สิ่งที่รัก/สิ่งที่เกลียด']);
+            const history = findValue(records, ['เหตุการณ์ในวัยเด็กที่ส่งผลต่อปัจจุบัน', 'เหตุการณ์ที่เปลี่ยนชีวิต', 'สภาพแวดล้อมในวัยเด็ก']);
+            const fear = findValue(records, ['ความกลัว/สิ่งที่ทำให้โกรธ', 'ความลับ/ความเสียใจ']);
+            const goal = findValue(records, ['ความปรารถนา/เป้าหมาย/แรงจูงใจ', 'เป้าหมายระยะยาว']);
+            const communication = findValue(records, ['โทนเสียง/รูปแบบการพูด', 'ความเร็วในการพูด/การใช้คำพูด', 'ภาษาที่ใช้/สำเนียง']);
+            const catchphrase = findValue(records, ['คำพูดติดปาก/กิริยาท่าทางเฉพาะตัว']);
+            const bodyLanguage = findValue(records, ['สีหน้า/รอยยิ้ม/เสียงหัวเราะ', 'ภาษากาย/การใช้มือ']);
+            const relationship = findValue(records, ['ครอบครัว (พ่อ/แม่/พี่น้อง)', 'เพื่อนสนิท/เพื่อนร่วมงาน', 'คู่รัก/คนสำคัญ']);
+            const approachabilityRecords = records.filter(record => [4, 8, 9].includes(record.sectionId));
+            const relationshipFlags = buildRelationshipFlags(records);
+
+            const guardedWords = ['เงียบ', 'ระวังตัว', 'ไม่ไว้ใจ', 'เย็นชา', 'ปิดใจ', 'ขี้อาย', 'สันโดษ', 'พูดน้อย'];
+            const openWords = ['เข้ากับคนง่าย', 'ร่าเริง', 'เป็นมิตร', 'เปิดใจ', 'ช่างพูด', 'อบอุ่น', 'อารมณ์ดี'];
+            const guardedEvidence = findContextualSignals(approachabilityRecords, guardedWords);
+            const openEvidence = findContextualSignals(approachabilityRecords, openWords);
+            let approachabilityScore = 3 - Math.min(2, guardedEvidence.length) + Math.min(2, openEvidence.length);
+            approachabilityScore = Math.max(1, Math.min(5, approachabilityScore));
+            const approachabilityReason = approachabilityScore <= 2
+                ? 'ต้องใช้เวลาและความสม่ำเสมอจึงจะเปิดใจให้คนอื่น'
+                : approachabilityScore >= 4
+                    ? 'มีแนวโน้มเริ่มบทสนทนาและสร้างความคุ้นเคยกับคนอื่นได้ง่าย'
+                    : 'ไม่ได้ปิดกั้นคนอื่น แต่จะเลือกเปิดใจตามความไว้ใจและสถานการณ์';
+            const approachabilityEvidence = [...guardedEvidence, ...openEvidence].map(match => match.term).filter((term, index, all) => all.indexOf(term) === index).slice(0, 4);
+
+            const characterType = [
+                personality || 'ยังไม่ระบุบุคลิกหลัก',
+                approachabilityScore <= 2 ? 'เปิดใจยากในช่วงแรก' : approachabilityScore >= 4 ? 'เข้าถึงคนอื่นได้ง่าย' : 'เปิดใจตามความไว้ใจ',
+                relationshipFlags.overall
+            ].join(' · ');
+
+            const summaryParts = [];
+            if (personality) summaryParts.push(`จากข้อมูลที่กรอก ตัวละครมีแกนบุคลิกเป็น “${personality}”`);
+            if (values) summaryParts.push(`ให้ความสำคัญกับ “${values}”`);
+            if (goal) summaryParts.push(`และมีแรงขับเคลื่อนจาก “${goal}”`);
+            if (history) summaryParts.push(`ประสบการณ์สำคัญที่ส่งผลต่อมุมมองปัจจุบันคือ “${history}”`);
+            if (!summaryParts.length) summaryParts.push('ยังมีข้อมูลไม่พอสำหรับสรุปบุคลิกอย่างละเอียด ลองเพิ่มนิสัยเด่น เหตุการณ์สำคัญ หรือเป้าหมายของตัวละคร');
+
+            const reportSections = sections.map(section => {
+                const sectionRecords = records.filter(record => record.sectionId === section.id);
+                if (!sectionRecords.length) return '';
+                return `<div class="report-block"><h3>${escapeHtml(section.id + '. ' + section.title)}</h3><dl class="report-grid">${sectionRecords.map(record => fact(record.label, record.value)).join('')}</dl></div>`;
+            }).join('');
+
+            const analysis = {
+                name,
+                nickname,
+                age,
+                occupation,
+                personality,
+                values,
+                history,
+                summary: summaryParts.join(' '),
+                characterType,
+                approachabilityScore,
+                approachabilityReason,
+                approachabilityEvidence,
+                communication,
+                catchphrase,
+                bodyLanguage,
+                reportSections,
+                strengths,
+                fear,
+                goal,
+                relationship,
+                relationshipFlags
+            };
+            analysis.coach = buildCharacterCoach(analysis, records);
+            return analysis;
+        }
+
+        function renderFlagCard(type, definition, signals, evidence, index = 0) {
+            const found = signals.length
+                ? `คำที่เกี่ยวข้อง: ${signals.join(', ')}`
+                : 'ยังไม่พบจากข้อมูลที่กรอก';
+            const context = evidence?.length ? `<p>บริบท: ${escapeHtml(evidence[0].evidence)}</p>` : '';
+            return `<article class="flag-card flag-${type}" style="--flag-index:${index}"><h4>${escapeHtml(definition.label)}</h4><p>${escapeHtml(definition.description)}</p><p><strong>${escapeHtml(found)}</strong></p>${context}</article>`;
+        }
+
+        function renderReport(analysis) {
+            const generatedAt = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            const reportContent = document.getElementById('report-content');
+            reportContent.innerHTML = `
+                <header class="report-header report-hero">
+                    <div class="report-kicker">Character Profile Report</div>
+                    <h2 id="report-title" class="report-title">รายงานสรุปตัวละคร: ${escapeHtml(analysis.name)}</h2>
+                    <div class="report-meta">
+                        ${analysis.nickname ? `<span>ชื่อเล่น: ${escapeHtml(analysis.nickname)}</span>` : ''}
+                        ${analysis.age ? `<span>อายุ: ${escapeHtml(analysis.age)}</span>` : ''}
+                        ${analysis.occupation ? `<span>อาชีพ: ${escapeHtml(analysis.occupation)}</span>` : ''}
+                        <span>จัดทำเมื่อ: ${escapeHtml(generatedAt)}</span>
+                    </div>
+                </header>
+
+                <div class="report-highlight report-feature">
+                    <strong>ตัวละครนี้เป็นคนแบบไหน</strong>
+                    <p>${escapeHtml(analysis.characterType)}</p>
+                </div>
+
+                <div class="report-block report-block--summary" style="--report-index:1">
+                    <h3>สรุปภาพรวม</h3>
+                    <p>${escapeHtml(analysis.summary)}</p>
+                </div>
+
+                <div class="report-block report-block--flags" style="--report-index:2">
+                    <h3>ธงความสัมพันธ์</h3>
+                    <p>${escapeHtml(analysis.relationshipFlags.overall)}</p>
+                    <div class="flag-grid">
+                        ${Object.entries(analysis.relationshipFlags.definitions).map(([type, definition], index) => renderFlagCard(type, definition, analysis.relationshipFlags.signals[type], analysis.relationshipFlags.evidence[type], index)).join('')}
+                    </div>
+                </div>
+
+                <div class="report-journey-grid">
+                    <div class="report-block report-block--approach" style="--report-index:3">
+                        <h3>การเข้าถึงและการเปิดใจ</h3>
+                        <p><strong>ระดับ ${analysis.approachabilityScore}/5</strong> — ${escapeHtml(analysis.approachabilityReason)}</p>
+                        <div class="approach-meter" role="img" aria-label="ระดับการเข้าถึง ${analysis.approachabilityScore} จาก 5">
+                            ${Array.from({length: 5}, (_, index) => `<span class="${index < analysis.approachabilityScore ? 'is-filled' : ''}" aria-hidden="true"></span>`).join('')}
+                        </div>
+                        ${analysis.approachabilityEvidence.length ? `<p>คำที่ใช้ประกอบ: ${escapeHtml(analysis.approachabilityEvidence.join(', '))}</p>` : '<p>ยังไม่มีคำหรือพฤติกรรมที่ชัดเจนพอสำหรับให้คะแนน</p>'}
+                    </div>
+
+                    <div class="report-block report-block--communication" style="--report-index:4">
+                        <h3>แนวทางการสื่อสาร</h3>
+                        <ul>${listItems([
+                            analysis.communication && `รูปแบบการพูด: ${analysis.communication}`,
+                            analysis.catchphrase && `ลักษณะเฉพาะ: ${analysis.catchphrase}`,
+                            analysis.bodyLanguage && `ภาษากาย: ${analysis.bodyLanguage}`
+                        ], 'ยังไม่มีข้อมูลด้านการสื่อสารเพียงพอ')}</ul>
+                    </div>
+                </div>
+
+                <div class="report-block report-block--behavior" style="--report-index:5">
+                    <h3>พฤติกรรมและแรงขับเคลื่อน</h3>
+                    <ul>${listItems([
+                        analysis.strengths && `จุดแข็ง/จุดอ่อน: ${analysis.strengths}`,
+                        analysis.fear && `สิ่งที่กระทบอารมณ์: ${analysis.fear}`,
+                        analysis.goal && `เป้าหมายหรือแรงจูงใจ: ${analysis.goal}`,
+                        analysis.relationship && `รูปแบบความสัมพันธ์: ${analysis.relationship}`
+                    ], 'เพิ่มข้อมูลเป้าหมาย ความกลัว หรือความสัมพันธ์ เพื่อให้วิเคราะห์พฤติกรรมได้ละเอียดขึ้น')}</ul>
+                </div>
+
+                <div class="report-note">
+                    หมายเหตุ: ธงเขียว/เหลือง/แดง/ดำเป็นการจัดหมวดแนวโน้มจากคำที่กรอกเพื่อช่วยเขียนตัวละคร ไม่ใช่การตัดสินคนจริงหรือการวินิจฉัยทางจิตวิทยา
+                </div>
+
+                <section class="coach-card corner-frame" aria-labelledby="coach-title">
+                    <div class="coach-layout">
+                        <div class="coach-main">
+                            <div class="coach-speech">
+                                <strong>AI CHARACTER GUIDE</strong>
+                                <p>${escapeHtml(analysis.coach.opening)}</p>
+                            </div>
+                            <div class="coach-kicker">Character Coach · Final Notes</div>
+                            <h3 id="coach-title">คำแนะนำเพิ่มเติมสำหรับตัวละคร</h3>
+                        </div>
+                        <div class="coach-character">
+                            <img src="./character-coach-guide.png" alt="ตัวการ์ตูนผู้ช่วยกำลังอธิบายคำแนะนำตัวละคร" loading="lazy">
+                        </div>
+                    </div>
+                    <div class="coach-content">
+                        <div class="coach-insights">
+                            <div class="coach-insight coach-insight--positive">
+                                <h4>สิ่งที่เด่นมากแล้ว</h4>
+                                <ul>${listItems(analysis.coach.strengths, 'ยังไม่มีข้อมูลเด่นชัด ลองเติมบุคลิกหรือเป้าหมาย')}</ul>
+                            </div>
+                            <div class="coach-insight coach-insight--next">
+                                <h4>สิ่งที่แนะนำให้ล็อกเพิ่ม</h4>
+                                <ul>${listItems(analysis.coach.suggestions, 'เพิ่มรายละเอียดอีกเล็กน้อยเพื่อคุมคาแรกเตอร์')}</ul>
+                            </div>
+                        </div>
+                        <div class="coach-prompt">
+                            <div class="coach-prompt-head">
+                                <h4>SYSTEM NOTE / OOC</h4>
+                                <span>คัดลอกไปวางในช่องคำสั่ง AI</span>
+                            </div>
+                            <pre>${escapeHtml(analysis.coach.prompt)}</pre>
+                        </div>
+                        <p class="coach-note">คำแนะนำนี้ช่วยลดโอกาสคาแรกเตอร์หลุดและทำให้โทนสม่ำเสมอขึ้น แต่ควรให้ AI ยึดข้อมูลหลักกับบริบทของฉากทุกครั้ง</p>
+                    </div>
+                </section>
+            `;
+            const rawReportContent = document.getElementById('raw-report-content');
+            rawReportContent.innerHTML = `
+                <header class="report-header">
+                    <div class="report-kicker">Character Profile Input</div>
+                    <h2 id="raw-report-title" class="report-title">ข้อมูลที่กรอก: ${escapeHtml(analysis.name)}</h2>
+                    <div class="report-meta"><span>จัดทำเมื่อ: ${escapeHtml(generatedAt)}</span></div>
+                </header>
+                ${analysis.reportSections || '<p>ยังไม่มีข้อมูลที่กรอก</p>'}
+            `;
+            document.getElementById('report-panel').classList.add('visible');
+            document.getElementById('raw-report-panel').classList.remove('visible');
+            document.getElementById('report-actions').classList.add('visible');
+            switchReportView('summary');
+            document.getElementById('copy-summary-btn').disabled = false;
+            document.getElementById('copy-coach-btn').disabled = false;
+            document.getElementById('copy-raw-btn').disabled = false;
+        }
+
+        function switchReportView(view) {
+            closeCopyMenu();
+            const showSummary = view === 'summary';
+            document.getElementById('report-panel').classList.toggle('visible', showSummary);
+            document.getElementById('raw-report-panel').classList.toggle('visible', !showSummary);
+            document.getElementById('report-panel').setAttribute('aria-hidden', String(!showSummary));
+            document.getElementById('raw-report-panel').setAttribute('aria-hidden', String(showSummary));
+            document.getElementById('summary-view-btn').classList.toggle('active', showSummary);
+            document.getElementById('raw-view-btn').classList.toggle('active', !showSummary);
+            document.getElementById('summary-view-btn').setAttribute('aria-pressed', String(showSummary));
+            document.getElementById('raw-view-btn').setAttribute('aria-pressed', String(!showSummary));
+        }
+
+        function analyzeCharacter() {
+            const records = collectCharacterData();
+            const status = document.getElementById('analysis-status');
+            const analyzeButton = document.getElementById('analyze-btn');
+            const reportPanel = document.getElementById('report-panel');
+            const visibleReport = document.querySelector('.report-sheet.visible');
+
+            if (!records.length) {
+                status.classList.add('is-warning');
+                analyzeButton?.classList.remove('is-warning');
+                void analyzeButton?.offsetWidth;
+                analyzeButton?.classList.add('is-warning');
+                status.textContent = 'กรุณากรอกข้อมูลอย่างน้อย 1 ช่องก่อนกดวิเคราะห์ตัวละคร';
+                const firstVisibleField = [...document.querySelectorAll('[data-field-key]')]
+                    .find(field => field.offsetParent !== null && !field.disabled);
+                firstVisibleField?.focus({ preventScroll: true });
+                firstVisibleField?.scrollIntoView({ behavior: getScrollBehavior(), block: 'center' });
+                return;
+            }
+
+            status.classList.remove('is-warning');
+            analyzeButton?.classList.remove('is-warning');
+            window.clearTimeout(reportTransitionTimer);
+            if (analyzeButton) {
+                analyzeButton.disabled = true;
+                analyzeButton.textContent = 'กำลังวิเคราะห์…';
+            }
+
+            const revealAnalysis = () => {
+                visibleReport?.classList.remove('visible', 'is-fading-out');
+                reportPanel?.classList.remove('visible', 'is-fading-out');
+                const analysis = buildAnalysis(records);
+                latestAnalysis = analysis;
+                renderReport(analysis);
+                if (reportPanel) {
+                    reportPanel.classList.remove('visible');
+                    void reportPanel.offsetWidth;
+                    reportPanel.classList.add('visible');
+                }
+                if (analyzeButton) {
+                    window.clearTimeout(analysisResetTimer);
+                    analyzeButton.disabled = false;
+                    analyzeButton.classList.remove('is-complete');
+                    void analyzeButton.offsetWidth;
+                    analyzeButton.classList.add('is-complete');
+                    analyzeButton.textContent = 'สร้างรายงานแล้ว';
+                    analysisResetTimer = window.setTimeout(() => {
+                        analyzeButton.textContent = 'วิเคราะห์ตัวละคร';
+                        analyzeButton.classList.remove('is-complete');
+                    }, 1600);
+                }
+                status.textContent = records.length
+                    ? `สร้างรายงานจากข้อมูล ${records.length} ช่องแล้ว — ตรวจสอบผลลัพธ์ด้านล่างได้เลย`
+                    : 'สร้างรายงานเปล่าแล้ว ลองกรอกข้อมูลบางช่องแล้วกดวิเคราะห์อีกครั้ง';
+                reportPanel?.scrollIntoView({ behavior: getScrollBehavior(), block: 'start' });
+            };
+
+            if (visibleReport) {
+                visibleReport.classList.add('is-fading-out');
+                const transitionDuration = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 120 : 240;
+                reportTransitionTimer = window.setTimeout(revealAnalysis, transitionDuration);
+            } else {
+                revealAnalysis();
+            }
+        }
+
+        async function copyReportText(targetId, label) {
+            const report = document.getElementById(targetId);
+            const status = document.getElementById('analysis-status');
+            if (!report || !latestAnalysis) return;
+
+            const wasVisible = report.classList.contains('visible');
+            report.classList.add('visible');
+            const text = (report.innerText || report.textContent || '').trim();
+            let copied = false;
+            try {
+                if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(text);
+                    copied = true;
+                }
+            } catch (error) {
+                copied = false;
+            }
+
+            if (!copied && document.execCommand) {
+                const helper = document.createElement('textarea');
+                helper.value = text;
+                helper.setAttribute('readonly', '');
+                helper.style.position = 'fixed';
+                helper.style.left = '-9999px';
+                helper.style.opacity = '0';
+                document.body.appendChild(helper);
+                helper.focus();
+                helper.select();
+                helper.setSelectionRange(0, helper.value.length);
+                try { copied = document.execCommand('copy') === true; } catch (error) { copied = false; }
+                helper.remove();
+            }
+
+            if (copied) {
+                status.textContent = `คัดลอก${label}แล้ว — นำไปวางใน Word, Docs, Notion หรือแชตได้เลย`;
+            } else {
+                openManualCopyPanel(text, label);
+                status.textContent = 'เบราว์เซอร์ไม่อนุญาตให้คัดลอกอัตโนมัติ เปิดกล่องเลือกข้อความให้แล้ว';
+            }
+            if (!wasVisible) report.classList.remove('visible');
+        }
+
+        async function copyCoachPrompt() {
+            const status = document.getElementById('analysis-status');
+            const prompt = latestAnalysis?.coach?.prompt;
+            if (!prompt) return;
+
+            let copied = false;
+            try {
+                if (navigator.clipboard?.writeText) {
+                    await navigator.clipboard.writeText(prompt);
+                    copied = true;
+                }
+            } catch (error) {
+                copied = false;
+            }
+
+            if (!copied && document.execCommand) {
+                const helper = document.createElement('textarea');
+                helper.value = prompt;
+                helper.setAttribute('readonly', '');
+                helper.style.position = 'fixed';
+                helper.style.left = '-9999px';
+                helper.style.opacity = '0';
+                document.body.appendChild(helper);
+                helper.focus();
+                helper.select();
+                helper.setSelectionRange(0, helper.value.length);
+                try { copied = document.execCommand('copy') === true; } catch (error) { copied = false; }
+                helper.remove();
+            }
+
+            if (copied) {
+                status.textContent = 'คัดลอก SYSTEM NOTE / OOC แล้ว — นำไปวางในช่องคำสั่ง AI ได้เลย';
+            } else {
+                openManualCopyPanel(prompt, 'SYSTEM NOTE / OOC');
+                status.textContent = 'เบราว์เซอร์ไม่อนุญาตให้คัดลอกอัตโนมัติ เปิดกล่องเลือกข้อความให้แล้ว';
+            }
+        }
+
+        function openManualCopyPanel(text, label) {
+            const panel = document.getElementById('manual-copy-panel');
+            const title = document.getElementById('manual-copy-title');
+            const textarea = document.getElementById('manual-copy-text');
+            title.textContent = `คัดลอก${label}ด้วยตนเอง`;
+            textarea.value = text;
+            panel.hidden = false;
+            panel.scrollIntoView({ behavior: getScrollBehavior(), block: 'nearest' });
+            textarea.focus();
+            textarea.select();
+        }
+
+        function selectManualCopyText() {
+            const textarea = document.getElementById('manual-copy-text');
+            textarea.focus();
+            textarea.select();
+            document.getElementById('analysis-status').textContent = 'เลือกข้อความทั้งหมดแล้ว กด Cmd+C หรือ Ctrl+C ได้เลย';
+        }
+
+        function closeManualCopyPanel() {
+            document.getElementById('manual-copy-panel').hidden = true;
+        }
+
+        function closeCopyMenu() {
+            document.getElementById('report-copy-menu')?.removeAttribute('open');
+        }
+
+        function resetCharacterSheet() {
+            const confirmed = window.confirm('ต้องการล้างข้อมูลตัวละครและรายงานทั้งหมดใช่ไหม? การกระทำนี้ย้อนกลับไม่ได้');
+            if (!confirmed) return;
+
+            window.clearTimeout(saveDraftTimer);
+            window.clearTimeout(analysisResetTimer);
+            window.clearTimeout(reportTransitionTimer);
+            document.querySelectorAll('[data-field-key]').forEach(field => { field.value = ''; });
+            try { localStorage.removeItem(DRAFT_STORAGE_KEY); } catch (error) { /* localStorage may be unavailable on file:// */ }
+
+            latestAnalysis = null;
+            ['report-panel', 'raw-report-panel'].forEach(id => {
+                const panel = document.getElementById(id);
+                panel?.classList.remove('visible', 'is-fading-out');
+                panel?.setAttribute('aria-hidden', 'true');
+            });
+            document.getElementById('report-content').innerHTML = '';
+            document.getElementById('raw-report-content').innerHTML = '';
+            document.getElementById('report-actions')?.classList.remove('visible');
+            document.getElementById('manual-copy-panel').hidden = true;
+            document.getElementById('manual-copy-text').value = '';
+            ['copy-summary-btn', 'copy-coach-btn', 'copy-raw-btn'].forEach(id => {
+                const button = document.getElementById(id);
+                if (button) button.disabled = true;
+            });
+            closeCopyMenu();
+
+            const summaryButton = document.getElementById('summary-view-btn');
+            const rawButton = document.getElementById('raw-view-btn');
+            summaryButton?.classList.add('active');
+            summaryButton?.setAttribute('aria-pressed', 'true');
+            rawButton?.classList.remove('active');
+            rawButton?.setAttribute('aria-pressed', 'false');
+
+            const analyzeButton = document.getElementById('analyze-btn');
+            if (analyzeButton) {
+                analyzeButton.disabled = false;
+                analyzeButton.textContent = 'วิเคราะห์ตัวละคร';
+                analyzeButton.classList.remove('is-complete', 'is-warning');
+            }
+            const status = document.getElementById('analysis-status');
+            status?.classList.remove('is-warning');
+            if (status) status.textContent = 'รีเซ็ตข้อมูลแล้ว — เริ่มสร้างตัวละครใหม่ได้เลย';
+
+            if (activeTabId !== 1) switchTab(1);
+            else renderProgress();
+            document.getElementById('tab-content-container')?.scrollIntoView({ behavior: getScrollBehavior(), block: 'start' });
+        }
+
     </script>
 </body>
 </html>
